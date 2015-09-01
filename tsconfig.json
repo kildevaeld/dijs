@@ -1,0 +1,33 @@
+{
+    "version": "1.6.0",
+    "compilerOptions": {
+        "target": "es6",
+        "isolatedModules": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declaration": true,
+        "noImplicitAny": false,
+        "removeComments": false,
+        "noLib": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "outDir": "./lib",
+        "rootDir": "./src"
+    },
+    "filesGlob": [
+        "./src/**/*.ts",
+        "./**/*.tsx",
+        "!./node_modules/**/*.ts"
+    ],
+    "files": [
+        "./src/index.ts",
+        "./src/container.ts",
+        "./src/decorators.ts",
+        "./src/metadata.ts",
+        "./src/errors.ts",
+        "./src/meta/index.ts",
+        "./src/meta/metadata.ts",
+        "./src/meta/decorators.ts",
+        "./src/meta/decorator-applicator.ts"
+    ]
+}
