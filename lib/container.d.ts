@@ -1,3 +1,4 @@
+export declare function getFunctionParameters(fn: Function, cache?: boolean): string[];
 export interface IActivator {
     invoke(fn: Function, args?: any[], targetKey?: string): any;
 }

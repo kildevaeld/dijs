@@ -4,19 +4,24 @@ import {ClassActivator, FactoryActivator, Resolver} from './metadata'
 import {Metadata} from './meta/metadata';
 import {DIAggregateError, createError, DIError} from './errors'
 // Fix Function#name on browsers that do not support it (IE):
-function test(){}
-if (!test.name) {
-  Object.defineProperty(Function.prototype, 'name', {
-    get: function() {
-      var name = this.toString().match(/^\s*function\s*(\S*)\s*\(/)[1];
-      // For better performance only parse once, and then cache the
-      // result through a new accessor for repeated access.
-      Object.defineProperty(this, 'name', { value: name });
-      return name;
-    }
-  });
-}
 
+
+const paramRegEx = /function[^(]*\(([^)]*)\)/i
+const paramCacheKey = '__funcKeys';
+
+export function getFunctionParameters(fn: Function, cache: boolean = true): string[] {
+  let params = <string[]>Metadata.getOwn(Metadata.paramTypes, fn)
+  if (!params) {
+    let match = fn.toString().match(paramRegEx)
+    if (match) {
+      params = match[1].replace(/\W+/, ' ').split(' ').map(x => x.replace(',', '').trim())
+      if (cache)
+        Metadata.define(Metadata.paramTypes, params, fn, undefined);
+    }
+  }
+
+  return params || [];
+}
 
 
 export interface IActivator {
@@ -305,7 +310,8 @@ export class DIContainer implements IActivator {
 
       return info
     }
-    info.keys = <string[]>Metadata.getOwn(Metadata.paramTypes, fn, targetKey) || emptyParameters;
+    info.keys = <string[]>Metadata.getOwn(Metadata.paramTypes, fn, targetKey) 
+      || getFunctionParameters(fn) || emptyParameters;
     return info;
   }
 

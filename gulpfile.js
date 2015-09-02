@@ -28,7 +28,7 @@ gulp.task('build', function () {
 });
 
 gulp.task('template', function () {
-	gulp.src('./template/*.ts', {read:false}).pipe(gulp.dest('./'))
+	gulp.src('./template/*.ts', {read:true}).pipe(gulp.dest('./'))
 })
 
 gulp.task('watch', ['build'], function () {
