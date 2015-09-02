@@ -15,6 +15,7 @@ export function getFunctionParameters(fn: Function, cache: boolean = true): stri
     let match = fn.toString().match(paramRegEx)
     if (match) {
       params = match[1].replace(/\W+/, ' ').split(' ').map(x => x.replace(',', '').trim())
+        .filter( m => m !== '')
       if (cache)
         Metadata.define(Metadata.paramTypes, params, fn, undefined);
     }
@@ -145,24 +146,24 @@ export class DIContainer implements IActivator {
     if(key instanceof Resolver){
       return key.get(this);
     }
-    
+
     entry = this.entries.get(key);
 
     if (entry !== undefined) {
       return entry[0](this);
     }
-    
+
 
     if(this.parent && this.parent.hasHandler(key)){
-      
+
       return this.parent.get(key)
-      
+
     }
-    
+
     // No point in registrering a string
     if (typeof key === 'string') {
       throw createError('DIResolveError','no component registered for key: ' + key)
-    } 
+    }
 
     this.autoRegister(key);
     entry = this.entries.get(key);
@@ -310,7 +311,7 @@ export class DIContainer implements IActivator {
 
       return info
     }
-    info.keys = <string[]>Metadata.getOwn(Metadata.paramTypes, fn, targetKey) 
+    info.keys = <string[]>Metadata.getOwn(Metadata.paramTypes, fn, targetKey)
       || getFunctionParameters(fn) || emptyParameters;
     return info;
   }
