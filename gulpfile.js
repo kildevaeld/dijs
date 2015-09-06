@@ -4,7 +4,8 @@ const gulp = require('gulp'),
 	tsc = require('gulp-typescript'),
 	babel = require('gulp-babel'),
 	merge = require('merge2'),
-	replace = require('gulp-replace');
+	replace = require('gulp-replace'),
+	webpack = require('gulp-webpack');
 
 const pkgjson = require('./package.json');
 
@@ -31,6 +32,19 @@ gulp.task('build', function () {
 
 });
 
+gulp.task('build:webpack', ['build'], function () {
+
+	return gulp.src('./lib/index.js')
+	.pipe(webpack({
+		output: {
+			filename: './di.js'
+		}
+	}))
+	.pipe(gulp.dest('./dist'));
+
+
+});
+
 gulp.task('template', function () {
 	gulp.src('./template/*.ts', {read:true}).pipe(gulp.dest('./'));
 });
@@ -39,4 +53,4 @@ gulp.task('watch', ['build'], function () {
 	return gulp.watch('./src/**/*.ts', ['build']);
 });
 
-gulp.task('default', ['build', 'template']);
+gulp.task('default', ['build', 'build:webpack' ,'template']);
