@@ -1,14 +1,14 @@
 
-
-export class DIError implements Error {
+export class DIError extends Error {
 	name: string
-	message:string
-	constructor(message:string) {
+	message: string
+	constructor(message?:string) {
+		super(message);
 		this.message = message;
 	}
-	
+
 	toString (): string {
-		return `[${this.name}: ${this.message}]` 
+		return `[${this.name}: ${this.message}]`
 	}
 }
 
@@ -18,9 +18,9 @@ export class DIAggregateError extends DIError {
 		super(message);
 		this.errors = errors;
 	}
-	
+
 	toString (): string {
-		return `[${this.name}: ${this.message}], errors:${this.errors}` 
+		return `[${this.name}: ${this.message}], errors:${this.errors}`
 	}
 }
 
@@ -29,7 +29,7 @@ export function createError(name:string, message:string, errors?:Error[]): Error
 	if (errors) {
 		e = new DIAggregateError(message, errors);
 	} else {
-		e = new DIError(message);	
+		e = new DIError(message);
 	}
 	e.name = name;
 	return e;

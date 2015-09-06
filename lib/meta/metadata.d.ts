@@ -20,5 +20,5 @@ export declare var Metadata: {
     get(metadataKey: string, target: Function, targetKey?: string): Object;
     getOwn(metadataKey: string, target: Function, targetKey?: string): Object;
     define(metadataKey: string, metadataValue: Object, target: Function, targetKey: string): void;
-    getOrCreateOwn(metadataKey: string, Type: Function, target: Function, targetKey: string): Object;
+    getOrCreateOwn(metadataKey: string, Type: FunctionConstructor, target: Function, targetKey: string): Object;
 };

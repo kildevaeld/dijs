@@ -1,4 +1,9 @@
+import { DIError } from './errors';
 export declare function getFunctionParameters(fn: Function, cache?: boolean): string[];
+export declare class DIBadKeyError extends DIError {
+    name: string;
+    message: string;
+}
 export interface IActivator {
     invoke(fn: Function, args?: any[], targetKey?: string): any;
 }

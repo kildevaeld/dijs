@@ -97,6 +97,7 @@ export var Metadata  = {
   resource:'aurelia:resource',
   paramTypes:'design:paramtypes',
   properties:'design:properties',
+
   get(metadataKey : string, target : Function, targetKey?: string) : Object {
 
     if(!target){
@@ -106,6 +107,7 @@ export var Metadata  = {
     let result = Metadata.getOwn(metadataKey, target, targetKey);
     return result === undefined ? Metadata.get(metadataKey, Object.getPrototypeOf(target), targetKey) : result;
   },
+
   getOwn(metadataKey : string, target : Function, targetKey?: string) : Object {
 
     if(!target){
@@ -115,14 +117,16 @@ export var Metadata  = {
     if(target.hasOwnProperty('decorators')){
       ensureDecorators(target);
     }
-  
+
     return (<any>Reflect).getOwnMetadata(metadataKey, target, targetKey);
   },
+
   define(metadataKey : string, metadataValue : Object, target : Function, targetKey : string) : void {
 
     (<any>Reflect).defineMetadata(metadataKey, metadataValue, target, targetKey);
   },
-  getOrCreateOwn(metadataKey : string, Type : Function, target : Function, targetKey : string) : Object {
+
+  getOrCreateOwn(metadataKey : string, Type : FunctionConstructor, target : Function, targetKey : string) : Object {
     let result = Metadata.getOwn(metadataKey, target, targetKey);
 
     if(result === undefined){

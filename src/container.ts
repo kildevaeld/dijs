@@ -3,11 +3,8 @@
 import {ClassActivator, FactoryActivator, Resolver} from './metadata'
 import {Metadata} from './meta/metadata';
 import {DIAggregateError, createError, DIError} from './errors'
-// Fix Function#name on browsers that do not support it (IE):
-
 
 const paramRegEx = /function[^(]*\(([^)]*)\)/i
-const paramCacheKey = '__funcKeys';
 
 export function getFunctionParameters(fn: Function, cache: boolean = true): string[] {
   let params = <string[]>Metadata.getOwn(Metadata.paramTypes, fn)
@@ -24,6 +21,11 @@ export function getFunctionParameters(fn: Function, cache: boolean = true): stri
   return params || [];
 }
 
+
+export class DIBadKeyError extends DIError {
+  name = 'BadKeyError'
+  message = "key not registered with container"
+}
 
 export interface IActivator {
 	invoke(fn : Function, args?: any[], targetKey?:string) : any
@@ -81,7 +83,7 @@ export class DIContainer implements IActivator {
     var registration;
 
     if (fn === null || fn === undefined){
-      throw new Error('badKeyError')
+      throw new DIBadKeyError();
     }
     if(typeof fn === 'function'){
 
@@ -117,7 +119,7 @@ export class DIContainer implements IActivator {
   */
   hasHandler(key: any, checkParent: boolean = false) : boolean {
     if (key === null || key === undefined){
-      throw new Error('badKeyError');
+      throw new DIBadKeyError();
     }
 
     return this.entries.has(key)
@@ -136,7 +138,7 @@ export class DIContainer implements IActivator {
     var entry;
 
     if (key === null || key === undefined){
-      throw new Error('badKeyError');
+      throw new DIBadKeyError();
     }
 
     if(key === DIContainer){
@@ -182,7 +184,7 @@ export class DIContainer implements IActivator {
     var entry;
 
     if (key === null || key === undefined){
-      throw new Error('badKeyError');
+      throw new DIBadKeyError();
     }
 
     entry = this.entries.get(key);
@@ -246,10 +248,9 @@ export class DIContainer implements IActivator {
       }
 
       message += ' Check the inner error for details.'
-      console.log(e)
-      e = createError("DIInvokeError", message, [e])
-      throw e;
-      //throw AggregateError(message, e, true);
+
+      throw createError("DIInvokeError", message, [e]);
+
     }
   }
 

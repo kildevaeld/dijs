@@ -1,7 +1,7 @@
-export declare class DIError implements Error {
+export declare class DIError extends Error {
     name: string;
     message: string;
-    constructor(message: string);
+    constructor(message?: string);
     toString(): string;
 }
 export declare class DIAggregateError extends DIError {

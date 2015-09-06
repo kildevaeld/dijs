@@ -11,8 +11,10 @@
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
+    "gulp-replace": "^0.5.4",
     "gulp-typescript": "^2.8.1",
-    "merge2": "^0.3.6"
+    "merge2": "^0.3.6",
+    "typescript": "^1.6.0-dev.20150906"
   },
   "typescript": {
     "definition": "di.d.ts"
