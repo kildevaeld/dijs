@@ -7,12 +7,16 @@ export declare class DIBadKeyError extends DIError {
 export interface IActivator {
     invoke(fn: Function, args?: any[], targetKey?: string): any;
 }
+export interface IDependencyResolver {
+    resolveDependencies(fn: Function, targetKey?: string): any[];
+}
 export interface IHandlerFunc {
     (c: IActivator): any;
 }
 export interface ConstructionInfo {
     activator: IActivator;
     keys?: string[];
+    dependencyResolver?: IDependencyResolver;
 }
 export declare var emptyParameters: any[];
 export declare class DIContainer implements IActivator {
@@ -70,6 +74,7 @@ export declare class DIContainer implements IActivator {
     * @return {Container} Returns a new container instance parented to this.
     */
     createChild(): DIContainer;
+    resolveDependencies(fn: Function, targetKey?: string): any[];
     /**
     * Invokes a function, recursively resolving its dependencies.
     *

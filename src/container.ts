@@ -31,6 +31,10 @@ export interface IActivator {
 	invoke(fn : Function, args?: any[], targetKey?:string) : any
 }
 
+export interface IDependencyResolver {
+  resolveDependencies(fn: Function, targetKey?:string): any[]
+}
+
 
 export interface IHandlerFunc {
   (c:IActivator): any
@@ -39,6 +43,7 @@ export interface IHandlerFunc {
 export interface ConstructionInfo {
   activator: IActivator
   keys?: string[]
+  dependencyResolver?: IDependencyResolver
 }
 
 export var emptyParameters = Object.freeze([]);
@@ -46,10 +51,10 @@ export var emptyParameters = Object.freeze([]);
 
 const instanceActivatorKey = "moby:instance-activator";
 const registrationKey = "moby:registration";
-
+const dependencyResolverKey = "moby:dependency-resolver";
 (<any>Metadata).instanceActivator =  instanceActivatorKey;
 (<any>Metadata).registration = registrationKey;
-
+(<any>Metadata).dependencyResolver = dependencyResolverKey;
 
 export class DIContainer implements IActivator {
   static instance: DIContainer
@@ -212,6 +217,27 @@ export class DIContainer implements IActivator {
     //childContainer.root = this.root;
     return childContainer;
   }
+  
+  resolveDependencies (fn:Function, targetKey?:string): any[] {
+    var info = this._getOrCreateConstructionSet(fn, targetKey)
+    var keys = info.keys,
+        args = new Array(keys.length);
+    var i, ii;
+
+   try {
+    for(i = 0, ii = keys.length; i < ii; ++i){
+      args[i] = this.get(keys[i]);
+    }  
+   } catch (e) {
+     var message = "Error"
+     if (i < ii) {
+        message += ` The argument at index ${i} (key:${keys[i]}) could not be satisfied.`;
+      }
+     throw createError("DependencyError", message);
+   } 
+   
+   return args
+  }
 
   /**
   * Invokes a function, recursively resolving its dependencies.
@@ -225,14 +251,13 @@ export class DIContainer implements IActivator {
     var info = this._getOrCreateConstructionSet(fn, targetKey)
 
     try{
-
-      var    keys = info.keys,
-          args = new Array(keys.length),
-          i, ii;
-
-      for(i = 0, ii = keys.length; i < ii; ++i){
-        args[i] = this.get(keys[i]);
+      var keys, args;
+      if (info.dependencyResolver) {
+        args = info.dependencyResolver.resolveDependencies(fn);
+      } else {
+        args = this.resolveDependencies(fn, targetKey)
       }
+
 
       if(deps !== undefined && Array.isArray(deps)){
         args = args.concat(deps);
@@ -243,9 +268,6 @@ export class DIContainer implements IActivator {
     }catch(e){
       var activatingText = info.activator instanceof ClassActivator ? 'instantiating' : 'invoking';
       var message = `Error ${activatingText} ${(<any>fn).name}.`
-      if (i < ii) {
-        message += ` The argument at index ${i} (key:${keys[i]}) could not be satisfied.`;
-      }
 
       message += ' Check the inner error for details.'
 
@@ -301,7 +323,12 @@ export class DIContainer implements IActivator {
   }
 
   _createConstructionSet(fn:Function, targetKey:string): ConstructionInfo {
-    let info: ConstructionInfo = {activator:<IActivator>Metadata.getOwn((<any>Metadata).instanceActivator, fn, targetKey)||ClassActivator.instance};
+    let info: ConstructionInfo = {
+      activator:<IActivator>Metadata.getOwn((<any>Metadata).instanceActivator, fn, targetKey)||ClassActivator.instance,
+      dependencyResolver: <IDependencyResolver>Metadata.getOwn(dependencyResolverKey,fn,targetKey)||this};
+
+
+      
 
     if ((<any>fn).inject !== undefined) {
       if (typeof (<any>fn).inject === 'function') {
