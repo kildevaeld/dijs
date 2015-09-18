@@ -3,6 +3,7 @@ export declare function getFunctionParameters(fn: Function, cache?: boolean): st
 export declare class DIBadKeyError extends DIError {
     name: string;
     message: string;
+    constructor(message?: string);
 }
 export interface IActivator {
     invoke(fn: Function, args?: any[], targetKey?: string): any;

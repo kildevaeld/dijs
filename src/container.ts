@@ -25,6 +25,9 @@ export function getFunctionParameters(fn: Function, cache: boolean = true): stri
 export class DIBadKeyError extends DIError {
   name = 'BadKeyError'
   message = "key not registered with container"
+  constructor(message?: string) {
+    super(message);
+  }
 }
 
 export interface IActivator {
@@ -217,7 +220,7 @@ export class DIContainer implements IActivator {
     //childContainer.root = this.root;
     return childContainer;
   }
-  
+
   resolveDependencies (fn:Function, targetKey?:string): any[] {
     var info = this._getOrCreateConstructionSet(fn, targetKey)
     var keys = info.keys,
@@ -227,15 +230,15 @@ export class DIContainer implements IActivator {
    try {
     for(i = 0, ii = keys.length; i < ii; ++i){
       args[i] = this.get(keys[i]);
-    }  
+    }
    } catch (e) {
      var message = "Error"
      if (i < ii) {
         message += ` The argument at index ${i} (key:${keys[i]}) could not be satisfied.`;
       }
      throw createError("DependencyError", message);
-   } 
-   
+   }
+
    return args
   }
 
@@ -328,7 +331,7 @@ export class DIContainer implements IActivator {
       dependencyResolver: <IDependencyResolver>Metadata.getOwn(dependencyResolverKey,fn,targetKey)||this};
 
 
-      
+
 
     if ((<any>fn).inject !== undefined) {
       if (typeof (<any>fn).inject === 'function') {

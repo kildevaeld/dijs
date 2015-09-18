@@ -119,8 +119,8 @@
 	}
 
 	class DIBadKeyError extends _errors.DIError {
-	    constructor() {
-	        super.apply(undefined, arguments);
+	    constructor(message) {
+	        super(message);
 	        this.name = 'BadKeyError';
 	        this.message = "key not registered with container";
 	    }

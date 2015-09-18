@@ -37,7 +37,7 @@ gulp.task('build:webpack', ['build'], function () {
 	return gulp.src('./lib/index.js')
 	.pipe(webpack({
 		output: {
-			filename: './di.js'
+			filename: 'di.js'
 		}
 	}))
 	.pipe(gulp.dest('./dist'));
