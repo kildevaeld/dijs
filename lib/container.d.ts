@@ -22,6 +22,7 @@ export interface ConstructionInfo {
 export declare var emptyParameters: any[];
 export declare class DIContainer implements IActivator {
     static instance: DIContainer;
+    targetKey: string;
     entries: Map<any, IHandlerFunc[]>;
     constructionInfo: Map<Function, ConstructionInfo>;
     parent: DIContainer;
@@ -59,7 +60,7 @@ export declare class DIContainer implements IActivator {
     * @param {Object} key The key that identifies the object to resolve.
     * @return {Object} Returns the resolved instance.
     */
-    get(key: any): any;
+    get(key: any, targetKey?: string): any;
     /**
     * Resolves all instance registered under the provided key.
     *

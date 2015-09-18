@@ -1,5 +1,4 @@
 
-
 import {ClassActivator, FactoryActivator, Resolver} from './metadata'
 import {Metadata} from './meta/metadata';
 import {DIAggregateError, createError, DIError} from './errors'
@@ -55,19 +54,25 @@ export var emptyParameters = Object.freeze([]);
 const instanceActivatorKey = "moby:instance-activator";
 const registrationKey = "moby:registration";
 const dependencyResolverKey = "moby:dependency-resolver";
+
 (<any>Metadata).instanceActivator =  instanceActivatorKey;
 (<any>Metadata).registration = registrationKey;
 (<any>Metadata).dependencyResolver = dependencyResolverKey;
 
 export class DIContainer implements IActivator {
   static instance: DIContainer
-
+  targetKey: string
   entries: Map<any, IHandlerFunc[]>
   constructionInfo: Map<Function, ConstructionInfo>
   parent: DIContainer
 
   get root (): DIContainer {
-    return null
+    let root = this, tmp = root
+    while (tmp) {
+      tmp = root.parent
+      if (tmp) root = tmp
+    }
+    return root
   }
 
   constructor (info?:Map<Function, ConstructionInfo>) {
@@ -89,7 +94,7 @@ export class DIContainer implements IActivator {
   */
   autoRegister(fn : any, key? : any, targetKey?:string) : void {
     var registration;
-
+    
     if (fn === null || fn === undefined){
       throw new DIBadKeyError();
     }
@@ -142,7 +147,7 @@ export class DIContainer implements IActivator {
   * @param {Object} key The key that identifies the object to resolve.
   * @return {Object} Returns the resolved instance.
   */
-  get(key : any) : any {
+  get(key: any, targetKey?:string) : any {
     var entry;
 
     if (key === null || key === undefined){
@@ -165,9 +170,7 @@ export class DIContainer implements IActivator {
 
 
     if(this.parent && this.parent.hasHandler(key)){
-
-      return this.parent.get(key)
-
+      return this.parent.get(key, targetKey)
     }
 
     // No point in registrering a string
@@ -175,7 +178,7 @@ export class DIContainer implements IActivator {
       throw createError('DIResolveError','no component registered for key: ' + key)
     }
 
-    this.autoRegister(key);
+    this.autoRegister(key, targetKey);
     entry = this.entries.get(key);
 
     return entry[0](this);
@@ -215,15 +218,14 @@ export class DIContainer implements IActivator {
   * @return {Container} Returns a new container instance parented to this.
   */
   createChild() : DIContainer {
-    var childContainer = new DIContainer(this.constructionInfo);
+    let childContainer = new DIContainer(this.constructionInfo);
     childContainer.parent = this;
-    //childContainer.root = this.root;
     return childContainer;
   }
 
   resolveDependencies (fn:Function, targetKey?:string): any[] {
-    var info = this._getOrCreateConstructionSet(fn, targetKey)
-    var keys = info.keys,
+    var info = this._getOrCreateConstructionSet(fn, targetKey),
+        keys = info.keys,
         args = new Array(keys.length);
     var i, ii;
 

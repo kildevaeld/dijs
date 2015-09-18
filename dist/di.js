@@ -142,7 +142,13 @@
 	        this.constructionInfo = info || new Map();
 	    }
 	    get root() {
-	        return null;
+	        var root = this,
+	            tmp = root;
+	        while (tmp) {
+	            tmp = root.parent;
+	            if (tmp) root = tmp;
+	        }
+	        return root;
 	    }
 	    makeGlobal() {
 	        DIContainer.instance = this;
@@ -203,7 +209,7 @@
 	    * @param {Object} key The key that identifies the object to resolve.
 	    * @return {Object} Returns the resolved instance.
 	    */
-	    get(key) {
+	    get(key, targetKey) {
 	        var entry;
 	        if (key === null || key === undefined) {
 	            throw new DIBadKeyError();
@@ -219,13 +225,13 @@
 	            return entry[0](this);
 	        }
 	        if (this.parent && this.parent.hasHandler(key)) {
-	            return this.parent.get(key);
+	            return this.parent.get(key, targetKey);
 	        }
 	        // No point in registrering a string
 	        if (typeof key === 'string') {
 	            throw (0, _errors.createError)('DIResolveError', 'no component registered for key: ' + key);
 	        }
-	        this.autoRegister(key);
+	        this.autoRegister(key, targetKey);
 	        entry = this.entries.get(key);
 	        return entry[0](this);
 	    }
@@ -263,12 +269,11 @@
 	    createChild() {
 	        var childContainer = new DIContainer(this.constructionInfo);
 	        childContainer.parent = this;
-	        //childContainer.root = this.root;
 	        return childContainer;
 	    }
 	    resolveDependencies(fn, targetKey) {
-	        var info = this._getOrCreateConstructionSet(fn, targetKey);
-	        var keys = info.keys,
+	        var info = this._getOrCreateConstructionSet(fn, targetKey),
+	            keys = info.keys,
 	            args = new Array(keys.length);
 	        var i, ii;
 	        try {
