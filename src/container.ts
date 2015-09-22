@@ -94,7 +94,7 @@ export class DIContainer implements IActivator {
   */
   autoRegister(fn : any, key? : any, targetKey?:string) : void {
     var registration;
-    
+
     if (fn === null || fn === undefined){
       throw new DIBadKeyError();
     }

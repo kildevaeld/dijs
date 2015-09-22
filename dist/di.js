@@ -66,7 +66,7 @@
 	        }
 	    });
 	}
-	var Version = '0.0.2';
+	var Version = '0.0.3';
 	exports.Version = Version;
 
 	var _container = __webpack_require__(1);
@@ -90,7 +90,14 @@
 	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
 	exports.getFunctionParameters = getFunctionParameters;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var _metadata = __webpack_require__(2);
 
@@ -118,13 +125,19 @@
 	    return params || [];
 	}
 
-	class DIBadKeyError extends _errors.DIError {
-	    constructor(message) {
-	        super(message);
+	var DIBadKeyError = (function (_DIError) {
+	    _inherits(DIBadKeyError, _DIError);
+
+	    function DIBadKeyError(message) {
+	        _classCallCheck(this, DIBadKeyError);
+
+	        _DIError.call(this, message);
 	        this.name = 'BadKeyError';
 	        this.message = "key not registered with container";
 	    }
-	}
+
+	    return DIBadKeyError;
+	})(_errors.DIError);
 
 	exports.DIBadKeyError = DIBadKeyError;
 	var emptyParameters = Object.freeze([]);
@@ -136,24 +149,19 @@
 	_metaMetadata.Metadata.registration = registrationKey;
 	_metaMetadata.Metadata.dependencyResolver = dependencyResolverKey;
 
-	class DIContainer {
-	    constructor(info) {
+	var DIContainer = (function () {
+	    function DIContainer(info) {
+	        _classCallCheck(this, DIContainer);
+
 	        this.entries = new Map();
 	        this.constructionInfo = info || new Map();
 	    }
-	    get root() {
-	        var root = this,
-	            tmp = root;
-	        while (tmp) {
-	            tmp = root.parent;
-	            if (tmp) root = tmp;
-	        }
-	        return root;
-	    }
-	    makeGlobal() {
+
+	    DIContainer.prototype.makeGlobal = function makeGlobal() {
 	        DIContainer.instance = this;
 	        return this;
-	    }
+	    };
+
 	    /**
 	    * Registers a type (constructor function) by inspecting its registration annotations. If none are found, then the default singleton registration is used.
 	    *
@@ -161,7 +169,8 @@
 	    * @param {Function} fn The constructor function to use when the dependency needs to be instantiated.
 	    * @param {Object} [key] The key that identifies the dependency at resolution time; usually a constructor function.
 	    */
-	    autoRegister(fn, key, targetKey) {
+
+	    DIContainer.prototype.autoRegister = function autoRegister(fn, key, targetKey) {
 	        var registration;
 	        if (fn === null || fn === undefined) {
 	            throw new DIBadKeyError();
@@ -176,16 +185,19 @@
 	        } else {
 	            this.registerInstance(fn, fn);
 	        }
-	    }
+	    };
+
 	    /**
 	    * Unregisters based on key.
 	    *
 	    * @method unregister
 	    * @param {Object} key The key that identifies the dependency at resolution time; usually a constructor function.
 	    */
-	    unregister(key) {
+
+	    DIContainer.prototype.unregister = function unregister(key) {
 	        this.entries['delete'](key);
-	    }
+	    };
+
 	    /**
 	    * Inspects the container to determine if a particular key has been registred.
 	    *
@@ -194,14 +206,16 @@
 	    * @param {Boolean} [checkParent=false] Indicates whether or not to check the parent container hierarchy.
 	    * @return {Boolean} Returns true if the key has been registred; false otherwise.
 	    */
-	    hasHandler(key) {
+
+	    DIContainer.prototype.hasHandler = function hasHandler(key) {
 	        var checkParent = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
 	        if (key === null || key === undefined) {
 	            throw new DIBadKeyError();
 	        }
 	        return this.entries.has(key) || checkParent && this.parent && this.parent.hasHandler(key, checkParent);
-	    }
+	    };
+
 	    /**
 	    * Resolves a single instance based on the provided key.
 	    *
@@ -209,7 +223,8 @@
 	    * @param {Object} key The key that identifies the object to resolve.
 	    * @return {Object} Returns the resolved instance.
 	    */
-	    get(key, targetKey) {
+
+	    DIContainer.prototype.get = function get(key, targetKey) {
 	        var entry;
 	        if (key === null || key === undefined) {
 	            throw new DIBadKeyError();
@@ -234,7 +249,8 @@
 	        this.autoRegister(key, targetKey);
 	        entry = this.entries.get(key);
 	        return entry[0](this);
-	    }
+	    };
+
 	    /**
 	    * Resolves all instance registered under the provided key.
 	    *
@@ -242,7 +258,8 @@
 	    * @param {Object} key The key that identifies the objects to resolve.
 	    * @return {Object[]} Returns an array of the resolved instances.
 	    */
-	    getAll(key) {
+
+	    DIContainer.prototype.getAll = function getAll(key) {
 	        var _this = this;
 
 	        var entry;
@@ -259,19 +276,22 @@
 	            return this.parent.getAll(key);
 	        }
 	        return [];
-	    }
+	    };
+
 	    /**
 	    * Creates a new dependency injection container whose parent is the current container.
 	    *
 	    * @method createChild
 	    * @return {Container} Returns a new container instance parented to this.
 	    */
-	    createChild() {
+
+	    DIContainer.prototype.createChild = function createChild() {
 	        var childContainer = new DIContainer(this.constructionInfo);
 	        childContainer.parent = this;
 	        return childContainer;
-	    }
-	    resolveDependencies(fn, targetKey) {
+	    };
+
+	    DIContainer.prototype.resolveDependencies = function resolveDependencies(fn, targetKey) {
 	        var info = this._getOrCreateConstructionSet(fn, targetKey),
 	            keys = info.keys,
 	            args = new Array(keys.length);
@@ -288,7 +308,8 @@
 	            throw (0, _errors.createError)("DependencyError", message);
 	        }
 	        return args;
-	    }
+	    };
+
 	    /**
 	    * Invokes a function, recursively resolving its dependencies.
 	    *
@@ -297,7 +318,8 @@
 	    * @param {any[]} [deps] Additional function dependencies to use during invocation.
 	    * @return {Object} Returns the instance resulting from calling the function.
 	    */
-	    invoke(fn, deps, targetKey) {
+
+	    DIContainer.prototype.invoke = function invoke(fn, deps, targetKey) {
 	        var info = this._getOrCreateConstructionSet(fn, targetKey);
 	        try {
 	            var keys, args;
@@ -316,27 +338,32 @@
 	            message += ' Check the inner error for details.';
 	            throw (0, _errors.createError)("DIInvokeError", message, [e]);
 	        }
-	    }
-	    registerInstance(key, instance) {
+	    };
+
+	    DIContainer.prototype.registerInstance = function registerInstance(key, instance) {
 	        this.registerHandler(key, function (x) {
 	            return instance;
 	        });
-	    }
-	    registerTransient(key, fn, targetKey) {
+	    };
+
+	    DIContainer.prototype.registerTransient = function registerTransient(key, fn, targetKey) {
 	        this.registerHandler(key, function (x) {
 	            return x.invoke(fn, null, targetKey);
 	        });
-	    }
-	    registerSingleton(key, fn, targetKey) {
+	    };
+
+	    DIContainer.prototype.registerSingleton = function registerSingleton(key, fn, targetKey) {
 	        var singleton;
 	        this.registerHandler(key, function (x) {
 	            return singleton || (singleton = x.invoke(fn, null, targetKey));
 	        });
-	    }
-	    registerHandler(key, handler) {
+	    };
+
+	    DIContainer.prototype.registerHandler = function registerHandler(key, handler) {
 	        this._getOrCreateEntry(key).push(handler);
-	    }
-	    _getOrCreateEntry(key) {
+	    };
+
+	    DIContainer.prototype._getOrCreateEntry = function _getOrCreateEntry(key) {
 	        var entry;
 	        if (key === null || key === undefined) {
 	            throw new _errors.DIError('key cannot be null or undefined.  (Are you trying to inject something that doesn\'t exist with DI?)');
@@ -347,16 +374,18 @@
 	            this.entries.set(key, entry);
 	        }
 	        return entry;
-	    }
-	    _getOrCreateConstructionSet(fn, targetKey) {
+	    };
+
+	    DIContainer.prototype._getOrCreateConstructionSet = function _getOrCreateConstructionSet(fn, targetKey) {
 	        var info = this.constructionInfo.get(fn);
 	        if (info === undefined) {
 	            info = this._createConstructionSet(fn, targetKey);
 	            this.constructionInfo.set(fn, info);
 	        }
 	        return info;
-	    }
-	    _createConstructionSet(fn, targetKey) {
+	    };
+
+	    DIContainer.prototype._createConstructionSet = function _createConstructionSet(fn, targetKey) {
 	        var info = {
 	            activator: _metaMetadata.Metadata.getOwn(_metaMetadata.Metadata.instanceActivator, fn, targetKey) || _metadata.ClassActivator.instance,
 	            dependencyResolver: _metaMetadata.Metadata.getOwn(dependencyResolverKey, fn, targetKey) || this };
@@ -370,8 +399,23 @@
 	        }
 	        info.keys = _metaMetadata.Metadata.getOwn(_metaMetadata.Metadata.paramTypes, fn, targetKey) || getFunctionParameters(fn) || emptyParameters;
 	        return info;
-	    }
-	}
+	    };
+
+	    _createClass(DIContainer, [{
+	        key: 'root',
+	        get: function get() {
+	            var root = this,
+	                tmp = root;
+	            while (tmp) {
+	                tmp = root.parent;
+	                if (tmp) root = tmp;
+	            }
+	            return root;
+	        }
+	    }]);
+
+	    return DIContainer;
+	})();
 
 	exports.DIContainer = DIContainer;
 
@@ -392,10 +436,25 @@
 	    value: true
 	});
 
-	class TransientRegistration {
-	    constructor(key) {
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var TransientRegistration = (function () {
+	    function TransientRegistration(key) {
+	        _classCallCheck(this, TransientRegistration);
+
 	        this.key = key;
 	    }
+
+	    /**
+	    * Used to allow functions/classes to indicate that they should be registered as singletons with the container.
+	    *
+	    * @class SingletonRegistration
+	    * @constructor
+	    * @param {Object} [key] The key to register as.
+	    */
+
 	    /**
 	    * Called by the container to register the annotated function/class as transient.
 	    *
@@ -404,23 +463,21 @@
 	    * @param {Object} key The key to register as.
 	    * @param {Object} fn The function to register (target of the annotation).
 	    */
-	    register(container, key, fn) {
-	        container.registerTransient(this.key || key, fn);
-	    }
-	}
 
-	/**
-	* Used to allow functions/classes to indicate that they should be registered as singletons with the container.
-	*
-	* @class SingletonRegistration
-	* @constructor
-	* @param {Object} [key] The key to register as.
-	*/
+	    TransientRegistration.prototype.register = function register(container, key, fn) {
+	        container.registerTransient(this.key || key, fn);
+	    };
+
+	    return TransientRegistration;
+	})();
+
 	exports.TransientRegistration = TransientRegistration;
 
-	class SingletonRegistration {
-	    constructor(keyOrRegisterInChild) {
+	var SingletonRegistration = (function () {
+	    function SingletonRegistration(keyOrRegisterInChild) {
 	        var registerInChild = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+	        _classCallCheck(this, SingletonRegistration);
 
 	        if (typeof keyOrRegisterInChild === 'boolean') {
 	            this.registerInChild = keyOrRegisterInChild;
@@ -429,6 +486,14 @@
 	            this.registerInChild = registerInChild;
 	        }
 	    }
+
+	    /**
+	    * An abstract resolver used to allow functions/classes to specify custom dependency resolution logic.
+	    *
+	    * @class Resolver
+	    * @constructor
+	    */
+
 	    /**
 	    * Called by the container to register the annotated function/class as a singleton.
 	    *
@@ -437,21 +502,31 @@
 	    * @param {Object} key The key to register as.
 	    * @param {Object} fn The function to register (target of the annotation).
 	    */
-	    register(container, key, fn) {
+
+	    SingletonRegistration.prototype.register = function register(container, key, fn) {
 	        var destination = this.registerInChild ? container : container.root;
 	        destination.registerSingleton(this.key || key, fn);
-	    }
-	}
+	    };
 
-	/**
-	* An abstract resolver used to allow functions/classes to specify custom dependency resolution logic.
-	*
-	* @class Resolver
-	* @constructor
-	*/
+	    return SingletonRegistration;
+	})();
+
 	exports.SingletonRegistration = SingletonRegistration;
 
-	class Resolver {
+	var Resolver = (function () {
+	    function Resolver() {
+	        _classCallCheck(this, Resolver);
+	    }
+
+	    /**
+	    * Used to allow functions/classes to specify lazy resolution logic.
+	    *
+	    * @class Lazy
+	    * @constructor
+	    * @extends Resolver
+	    * @param {Object} key The key to lazily resolve.
+	    */
+
 	    /**
 	    * Called by the container to allow custom resolution of dependencies for a function/class.
 	    *
@@ -459,26 +534,35 @@
 	    * @param {Container} container The container to resolve from.
 	    * @return {Object} Returns the resolved object.
 	    */
-	    get(container) {
-	        throw new Error('A custom Resolver must implement get(container) and return the resolved instance(s).');
-	    }
-	}
 
-	/**
-	* Used to allow functions/classes to specify lazy resolution logic.
-	*
-	* @class Lazy
-	* @constructor
-	* @extends Resolver
-	* @param {Object} key The key to lazily resolve.
-	*/
+	    Resolver.prototype.get = function get(container) {
+	        throw new Error('A custom Resolver must implement get(container) and return the resolved instance(s).');
+	    };
+
+	    return Resolver;
+	})();
+
 	exports.Resolver = Resolver;
 
-	class Lazy extends Resolver {
-	    constructor(key) {
-	        super();
+	var Lazy = (function (_Resolver) {
+	    _inherits(Lazy, _Resolver);
+
+	    function Lazy(key) {
+	        _classCallCheck(this, Lazy);
+
+	        _Resolver.call(this);
 	        this.key = key;
 	    }
+
+	    /**
+	    * Used to allow functions/classes to specify resolution of all matches to a key.
+	    *
+	    * @class All
+	    * @constructor
+	    * @extends Resolver
+	    * @param {Object} key The key to lazily resolve all matches for.
+	    */
+
 	    /**
 	    * Called by the container to lazily resolve the dependency into a lazy locator function.
 	    *
@@ -486,13 +570,15 @@
 	    * @param {Container} container The container to resolve from.
 	    * @return {Function} Returns a function which can be invoked at a later time to obtain the actual dependency.
 	    */
-	    get(container) {
+
+	    Lazy.prototype.get = function get(container) {
 	        var _this = this;
 
 	        return function () {
 	            return container.get(_this.key);
 	        };
-	    }
+	    };
+
 	    /**
 	    * Creates a Lazy Resolver for the supplied key.
 	    *
@@ -501,26 +587,36 @@
 	    * @param {Object} key The key to lazily resolve.
 	    * @return {Lazy} Returns an insance of Lazy for the key.
 	    */
-	    static of(key) {
-	        return new Lazy(key);
-	    }
-	}
 
-	/**
-	* Used to allow functions/classes to specify resolution of all matches to a key.
-	*
-	* @class All
-	* @constructor
-	* @extends Resolver
-	* @param {Object} key The key to lazily resolve all matches for.
-	*/
+	    Lazy.of = function of(key) {
+	        return new Lazy(key);
+	    };
+
+	    return Lazy;
+	})(Resolver);
+
 	exports.Lazy = Lazy;
 
-	class All extends Resolver {
-	    constructor(key) {
-	        super();
+	var All = (function (_Resolver2) {
+	    _inherits(All, _Resolver2);
+
+	    function All(key) {
+	        _classCallCheck(this, All);
+
+	        _Resolver2.call(this);
 	        this.key = key;
 	    }
+
+	    /**
+	    * Used to allow functions/classes to specify an optional dependency, which will be resolved only if already registred with the container.
+	    *
+	    * @class Optional
+	    * @constructor
+	    * @extends Resolver
+	    * @param {Object} key The key to optionally resolve for.
+	    * @param {Boolean} [checkParent=false] Indicates whether or not the parent container hierarchy should be checked.
+	    */
+
 	    /**
 	    * Called by the container to resolve all matching dependencies as an array of instances.
 	    *
@@ -528,9 +624,11 @@
 	    * @param {Container} container The container to resolve from.
 	    * @return {Object[]} Returns an array of all matching instances.
 	    */
-	    get(container) {
+
+	    All.prototype.get = function get(container) {
 	        return container.getAll(this.key);
-	    }
+	    };
+
 	    /**
 	    * Creates an All Resolver for the supplied key.
 	    *
@@ -539,30 +637,38 @@
 	    * @param {Object} key The key to resolve all instances for.
 	    * @return {All} Returns an insance of All for the key.
 	    */
-	    static of(key) {
-	        return new All(key);
-	    }
-	}
 
-	/**
-	* Used to allow functions/classes to specify an optional dependency, which will be resolved only if already registred with the container.
-	*
-	* @class Optional
-	* @constructor
-	* @extends Resolver
-	* @param {Object} key The key to optionally resolve for.
-	* @param {Boolean} [checkParent=false] Indicates whether or not the parent container hierarchy should be checked.
-	*/
+	    All.of = function of(key) {
+	        return new All(key);
+	    };
+
+	    return All;
+	})(Resolver);
+
 	exports.All = All;
 
-	class Optional extends Resolver {
-	    constructor(key) {
+	var Optional = (function (_Resolver3) {
+	    _inherits(Optional, _Resolver3);
+
+	    function Optional(key) {
 	        var checkParent = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
-	        super();
+	        _classCallCheck(this, Optional);
+
+	        _Resolver3.call(this);
 	        this.key = key;
 	        this.checkParent = checkParent;
 	    }
+
+	    /**
+	    * Used to inject the dependency from the parent container instead of the current one.
+	    *
+	    * @class Parent
+	    * @constructor
+	    * @extends Resolver
+	    * @param {Object} key The key to resolve from the parent container.
+	    */
+
 	    /**
 	    * Called by the container to provide optional resolution of the key.
 	    *
@@ -570,12 +676,14 @@
 	    * @param {Container} container The container to resolve from.
 	    * @return {Object} Returns the instance if found; otherwise null.
 	    */
-	    get(container) {
+
+	    Optional.prototype.get = function get(container) {
 	        if (container.hasHandler(this.key, this.checkParent)) {
 	            return container.get(this.key);
 	        }
 	        return null;
-	    }
+	    };
+
 	    /**
 	    * Creates an Optional Resolver for the supplied key.
 	    *
@@ -585,28 +693,35 @@
 	    * @param {Boolean} [checkParent=false] Indicates whether or not the parent container hierarchy should be checked.
 	    * @return {Optional} Returns an insance of Optional for the key.
 	    */
-	    static of(key) {
+
+	    Optional.of = function of(key) {
 	        var checkParent = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
 	        return new Optional(key, checkParent);
-	    }
-	}
+	    };
 
-	/**
-	* Used to inject the dependency from the parent container instead of the current one.
-	*
-	* @class Parent
-	* @constructor
-	* @extends Resolver
-	* @param {Object} key The key to resolve from the parent container.
-	*/
+	    return Optional;
+	})(Resolver);
+
 	exports.Optional = Optional;
 
-	class Parent extends Resolver {
-	    constructor(key) {
-	        super();
+	var Parent = (function (_Resolver4) {
+	    _inherits(Parent, _Resolver4);
+
+	    function Parent(key) {
+	        _classCallCheck(this, Parent);
+
+	        _Resolver4.call(this);
 	        this.key = key;
 	    }
+
+	    /**
+	    * Used to instantiate a class.
+	    *
+	    * @class ClassActivator
+	    * @constructor
+	    */
+
 	    /**
 	    * Called by the container to load the dependency from the parent container
 	    *
@@ -614,9 +729,11 @@
 	    * @param {Container} container The container to resolve the parent from.
 	    * @return {Function} Returns the matching instance from the parent container
 	    */
-	    get(container) {
+
+	    Parent.prototype.get = function get(container) {
 	        return container.parent ? container.parent.get(this.key) : null;
-	    }
+	    };
+
 	    /**
 	    * Creates a Parent Resolver for the supplied key.
 	    *
@@ -625,24 +742,27 @@
 	    * @param {Object} key The key to resolve.
 	    * @return {Parent} Returns an insance of Parent for the key.
 	    */
-	    static of(key) {
-	        return new Parent(key);
-	    }
-	}
 
-	/**
-	* Used to instantiate a class.
-	*
-	* @class ClassActivator
-	* @constructor
-	*/
+	    Parent.of = function of(key) {
+	        return new Parent(key);
+	    };
+
+	    return Parent;
+	})(Resolver);
+
 	exports.Parent = Parent;
 
-	class ClassActivator {
-	    invoke(fn, args) {
-	        return Reflect.construct(fn, args);
+	var ClassActivator = (function () {
+	    function ClassActivator() {
+	        _classCallCheck(this, ClassActivator);
 	    }
-	}
+
+	    ClassActivator.prototype.invoke = function invoke(fn, args) {
+	        return Reflect.construct(fn, args);
+	    };
+
+	    return ClassActivator;
+	})();
 
 	exports.ClassActivator = ClassActivator;
 
@@ -654,11 +774,17 @@
 	* @constructor
 	*/
 
-	class FactoryActivator {
-	    invoke(fn, args) {
-	        return fn.apply(undefined, args);
+	var FactoryActivator = (function () {
+	    function FactoryActivator() {
+	        _classCallCheck(this, FactoryActivator);
 	    }
-	}
+
+	    FactoryActivator.prototype.invoke = function invoke(fn, args) {
+	        return fn.apply(undefined, args);
+	    };
+
+	    return FactoryActivator;
+	})();
 
 	exports.FactoryActivator = FactoryActivator;
 
@@ -792,27 +918,45 @@
 	});
 	exports.createError = createError;
 
-	class DIError extends Error {
-	    constructor(message) {
-	        super(message);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var DIError = (function (_Error) {
+	    _inherits(DIError, _Error);
+
+	    function DIError(message) {
+	        _classCallCheck(this, DIError);
+
+	        _Error.call(this, message);
 	        this.message = message;
 	    }
-	    toString() {
+
+	    DIError.prototype.toString = function toString() {
 	        return "[" + this.name + ": " + this.message + "]";
-	    }
-	}
+	    };
+
+	    return DIError;
+	})(Error);
 
 	exports.DIError = DIError;
 
-	class DIAggregateError extends DIError {
-	    constructor(message, errors) {
-	        super(message);
+	var DIAggregateError = (function (_DIError) {
+	    _inherits(DIAggregateError, _DIError);
+
+	    function DIAggregateError(message, errors) {
+	        _classCallCheck(this, DIAggregateError);
+
+	        _DIError.call(this, message);
 	        this.errors = errors;
 	    }
-	    toString() {
+
+	    DIAggregateError.prototype.toString = function toString() {
 	        return "[" + this.name + ": " + this.message + "], errors:" + this.errors;
-	    }
-	}
+	    };
+
+	    return DIAggregateError;
+	})(DIError);
 
 	exports.DIAggregateError = DIAggregateError;
 
@@ -895,33 +1039,39 @@
 	    value: true
 	});
 
-	class DecoratorApplicator {
-	    constructor() {
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var DecoratorApplicator = (function () {
+	    function DecoratorApplicator() {
+	        _classCallCheck(this, DecoratorApplicator);
+
 	        this._first = null;
 	        this._second = null;
 	        this._third = null;
 	        this._rest = null;
 	    }
-	    decorator(decorator) {
+
+	    DecoratorApplicator.prototype.decorator = function decorator(_decorator) {
 	        if (this._first === null) {
-	            this._first = decorator;
+	            this._first = _decorator;
 	            return this;
 	        }
 	        if (this._second === null) {
-	            this._second = decorator;
+	            this._second = _decorator;
 	            return this;
 	        }
 	        if (this._third === null) {
-	            this._third = decorator;
+	            this._third = _decorator;
 	            return this;
 	        }
 	        if (this._rest === null) {
 	            this._rest = [];
 	        }
-	        this._rest.push(decorator);
+	        this._rest.push(_decorator);
 	        return this;
-	    }
-	    _decorate(target) {
+	    };
+
+	    DecoratorApplicator.prototype._decorate = function _decorate(target) {
 	        var i, ii, rest;
 	        if (this._first !== null) {
 	            this._first(target);
@@ -938,8 +1088,10 @@
 	                rest[i](target);
 	            }
 	        }
-	    }
-	}
+	    };
+
+	    return DecoratorApplicator;
+	})();
 
 	exports.DecoratorApplicator = DecoratorApplicator;
 

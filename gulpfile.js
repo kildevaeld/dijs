@@ -23,7 +23,8 @@ gulp.task('build', function () {
 
 	return merge([
 		result.js.pipe(babel({
-			blacklist: ['regenerator', 'es6.classes']
+			blacklist: ['regenerator'],
+			loose: ['es6.classes']
 		}))
 			.pipe(replace('<%version%>', pkgjson.version))
 			.pipe(gulp.dest('./lib')),
