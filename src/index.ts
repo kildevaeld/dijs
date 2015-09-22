@@ -17,3 +17,4 @@ export const Version = '<%version%>';
 export * from './container'
 export * from './meta/index'
 export * from './decorators'
+export * from './metadata'

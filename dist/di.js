@@ -81,6 +81,10 @@
 
 	_defaults(exports, _interopExportWildcard(_decorators, _defaults));
 
+	var _metadata = __webpack_require__(2);
+
+	_defaults(exports, _interopExportWildcard(_metadata, _defaults));
+
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
