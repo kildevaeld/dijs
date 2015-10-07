@@ -263,14 +263,14 @@ export class DIContainer implements IActivator {
         args = this.resolveDependencies(fn, targetKey)
       }
 
-
       if(deps !== undefined && Array.isArray(deps)){
         args = args.concat(deps);
       }
-
+     
       return (<any>info.activator).invoke(fn, args, targetKey, keys);
 
     }catch(e){
+     
       var activatingText = info.activator instanceof ClassActivator ? 'instantiating' : 'invoking';
       var message = `Error ${activatingText} ${(<any>fn).name}.`
 

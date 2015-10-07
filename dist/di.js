@@ -66,7 +66,7 @@
 	        }
 	    });
 	}
-	var Version = '0.0.3';
+	var Version = '0.0.4';
 	exports.Version = Version;
 
 	var _container = __webpack_require__(1);
