@@ -1,4 +1,4 @@
-
+/* global global:true */
 const theGlobal = (function() {
   // Workers don’t have `window`, only `self`
   if (typeof self !== 'undefined') {
@@ -94,7 +94,6 @@ export interface MetadataType {
 export var Metadata  = {
   global: theGlobal,
   noop: function(){},
-  resource:'aurelia:resource',
   paramTypes:'design:paramtypes',
   properties:'design:properties',
 
@@ -121,7 +120,7 @@ export var Metadata  = {
     return (<any>Reflect).getOwnMetadata(metadataKey, target, targetKey);
   },
 
-  define(metadataKey : string, metadataValue : Object, target : Function, targetKey : string) : void {
+  define(metadataKey : string, metadataValue : Object, target : Function, targetKey? : string) : void {
 
     (<any>Reflect).defineMetadata(metadataKey, metadataValue, target, targetKey);
   },

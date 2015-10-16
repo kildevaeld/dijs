@@ -66,7 +66,7 @@
 	        }
 	    });
 	}
-	var Version = '0.0.4';
+	var Version = '0.0.5';
 	exports.Version = Version;
 
 	var _container = __webpack_require__(1);
@@ -177,7 +177,7 @@
 	    DIContainer.prototype.autoRegister = function autoRegister(fn, key, targetKey) {
 	        var registration;
 	        if (fn === null || fn === undefined) {
-	            throw new DIBadKeyError();
+	            throw new DIBadKeyError('no key');
 	        }
 	        if (typeof fn === 'function') {
 	            registration = _metaMetadata.Metadata.get(registrationKey, fn, targetKey);

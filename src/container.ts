@@ -96,7 +96,7 @@ export class DIContainer implements IActivator {
     var registration;
 
     if (fn === null || fn === undefined){
-      throw new DIBadKeyError();
+      throw new DIBadKeyError('no key');
     }
     if(typeof fn === 'function'){
 
@@ -266,11 +266,11 @@ export class DIContainer implements IActivator {
       if(deps !== undefined && Array.isArray(deps)){
         args = args.concat(deps);
       }
-     
+
       return (<any>info.activator).invoke(fn, args, targetKey, keys);
 
     }catch(e){
-     
+
       var activatingText = info.activator instanceof ClassActivator ? 'instantiating' : 'invoking';
       var message = `Error ${activatingText} ${(<any>fn).name}.`
 
