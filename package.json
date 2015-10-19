@@ -23,7 +23,7 @@
     "definition": "di.d.ts"
   },
   "jspm": {
-    "registry": "github"
+    "main": "./dist/di.js"
   },
   "typings": "lib/index"
 }
