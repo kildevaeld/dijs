@@ -17,7 +17,7 @@
     "merge2": "^0.3.6",
     "mocha": "^2.3.3",
     "should": "^7.1.0",
-    "typescript": "^1.6.0-dev.20150906"
+    "typescript": "^1.8.0-dev.20151124"
   },
   "typescript": {
     "definition": "di.d.ts"
@@ -25,5 +25,10 @@
   "jspm": {
     "main": "./dist/di.js"
   },
-  "typings": "lib/index"
+  "typings": "lib/index",
+  "keywords": [
+    "di",
+    "container",
+    "ioc"
+  ]
 }
