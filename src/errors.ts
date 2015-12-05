@@ -22,6 +22,8 @@ export class DIAggregateError extends DIError {
 	toString (): string {
 		return `[${this.name}: ${this.message}], errors:${this.errors}`
 	}
+
+
 }
 
 export function createError(name:string, message:string, errors?:Error[]): Error {
