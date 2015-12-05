@@ -4,3 +4,5 @@ test
 gulpfile.js
 jsconfig.json
 dist
+.jshintrc
+tsconfig.json

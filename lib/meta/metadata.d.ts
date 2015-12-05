@@ -14,7 +14,6 @@ export interface MetadataType {
 export declare var Metadata: {
     global: any;
     noop: () => void;
-    resource: string;
     paramTypes: string;
     properties: string;
     get(metadataKey: string, target: Function, targetKey?: string): Object;

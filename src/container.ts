@@ -238,7 +238,7 @@ export class DIContainer implements IActivator {
      if (i < ii) {
         message += ` The argument at index ${i} (key:${keys[i]}) could not be satisfied.`;
       }
-     throw createError("DependencyError", message);
+     throw createError("DependencyError", message, [e]);
    }
 
    return args

@@ -309,7 +309,7 @@
 	            if (i < ii) {
 	                message += ' The argument at index ' + i + ' (key:' + keys[i] + ') could not be satisfied.';
 	            }
-	            throw (0, _errors.createError)("DependencyError", message);
+	            throw (0, _errors.createError)("DependencyError", message, [e]);
 	        }
 	        return args;
 	    };
@@ -798,7 +798,8 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	/* WEBPACK VAR INJECTION */(function(global) {/* global global:true */
+	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
 	    value: true
@@ -877,7 +878,6 @@
 	var Metadata = {
 	    global: theGlobal,
 	    noop: function noop() {},
-	    resource: 'aurelia:resource',
 	    paramTypes: 'design:paramtypes',
 	    properties: 'design:properties',
 	    get: function get(metadataKey, target, targetKey) {
