@@ -1,9 +1,9 @@
 
-import {ClassActivator, FactoryActivator, Resolver} from './metadata'
+import {ClassActivator, FactoryActivator, Resolver} from './metadata';
 import {Metadata} from './meta/metadata';
-import {DIAggregateError, createError, DIError} from './errors'
+import {DIAggregateError, createError, DIError} from './errors';
 
-const paramRegEx = /function[^(]*\(([^)]*)\)/i
+const paramRegEx = /function[^(]*\(([^)]*)\)/i;
 
 export function getFunctionParameters(fn: Function, cache: boolean = true): string[] {
   let params = <string[]>Metadata.getOwn(Metadata.paramTypes, fn)
@@ -67,9 +67,9 @@ export class DIContainer implements IActivator {
   parent: DIContainer
 
   get root (): DIContainer {
-    let root = this, tmp = root
+    let root : DIContainer = this, tmp : DIContainer = root
     while (tmp) {
-      tmp = root.parent
+      tmp = <any>root.parent
       if (tmp) root = tmp
     }
     return root
@@ -223,7 +223,13 @@ export class DIContainer implements IActivator {
     return childContainer;
   }
 
-  resolveDependencies (fn:Function, targetKey?:string): any[] {
+  /**
+   * Resolve dependencies for the given function
+   * @method resolveDependencies
+   * @param {Function} fn 
+   * @return {Array<any>}
+   */
+  public resolveDependencies (fn:Function, targetKey?:string): any[] {
     var info = this._getOrCreateConstructionSet(fn, targetKey),
         keys = info.keys,
         args = new Array(keys.length);
@@ -252,7 +258,7 @@ export class DIContainer implements IActivator {
   * @param {any[]} [deps] Additional function dependencies to use during invocation.
   * @return {Object} Returns the instance resulting from calling the function.
   */
-  invoke(fn : Function, deps? : any[], targetKey?:string) : any {
+  public invoke(fn : Function, deps? : any[], targetKey?:string) : any {
     var info = this._getOrCreateConstructionSet(fn, targetKey)
 
     try{
@@ -269,7 +275,7 @@ export class DIContainer implements IActivator {
 
       return (<any>info.activator).invoke(fn, args, targetKey, keys);
 
-    }catch(e){
+    } catch(e) {
 
       var activatingText = info.activator instanceof ClassActivator ? 'instantiating' : 'invoking';
       var message = `Error ${activatingText} ${(<any>fn).name}.`
@@ -281,25 +287,25 @@ export class DIContainer implements IActivator {
     }
   }
 
-  registerInstance(key:any, instance:any) {
+  public registerInstance(key:any, instance:any) {
     this.registerHandler(key, x => instance);
   }
 
-  registerTransient(key:any, fn:Function, targetKey?:string) {
+  public registerTransient(key:any, fn:Function, targetKey?:string) {
     this.registerHandler(key, x => x.invoke(fn, null, targetKey) )
   }
 
-  registerSingleton(key:any, fn:Function, targetKey?:string) {
+  public registerSingleton(key:any, fn:Function, targetKey?:string) {
     var singleton;
     this.registerHandler(key, x => singleton|| (singleton = x.invoke(fn,null,targetKey) ))
   }
 
-  registerHandler(key:any, handler: IHandlerFunc) {
+  public registerHandler(key:any, handler: IHandlerFunc) {
     this._getOrCreateEntry(key).push(handler)
   }
 
 
-  _getOrCreateEntry (key:string): IHandlerFunc[]  {
+  private _getOrCreateEntry (key:string): IHandlerFunc[]  {
     var entry;
 
     if (key === null || key === undefined){
@@ -317,7 +323,7 @@ export class DIContainer implements IActivator {
 
   }
 
-  _getOrCreateConstructionSet(fn:Function, targetKey:string): ConstructionInfo {
+  private _getOrCreateConstructionSet(fn:Function, targetKey:string): ConstructionInfo {
     var info = this.constructionInfo.get(fn)
 
     if (info === undefined) {
@@ -327,7 +333,7 @@ export class DIContainer implements IActivator {
     return info;
   }
 
-  _createConstructionSet(fn:Function, targetKey:string): ConstructionInfo {
+  private _createConstructionSet(fn:Function, targetKey:string): ConstructionInfo {
     let info: ConstructionInfo = {
       activator:<IActivator>Metadata.getOwn((<any>Metadata).instanceActivator, fn, targetKey)||ClassActivator.instance,
       dependencyResolver: <IDependencyResolver>Metadata.getOwn(dependencyResolverKey,fn,targetKey)||this};

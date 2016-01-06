@@ -10,6 +10,7 @@ export function autoinject(target? : any){
   return target ? deco(target) : deco;
 }
 
+
 export function inject(...rest : any[]){
   return function(target){
     target.inject = rest;

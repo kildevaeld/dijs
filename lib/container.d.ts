@@ -76,6 +76,12 @@ export declare class DIContainer implements IActivator {
     * @return {Container} Returns a new container instance parented to this.
     */
     createChild(): DIContainer;
+    /**
+     * Resolve dependencies for the given function
+     * @method resolveDependencies
+     * @param {Function} fn
+     * @return {Array<any>}
+     */
     resolveDependencies(fn: Function, targetKey?: string): any[];
     /**
     * Invokes a function, recursively resolving its dependencies.
@@ -90,7 +96,7 @@ export declare class DIContainer implements IActivator {
     registerTransient(key: any, fn: Function, targetKey?: string): void;
     registerSingleton(key: any, fn: Function, targetKey?: string): void;
     registerHandler(key: any, handler: IHandlerFunc): void;
-    _getOrCreateEntry(key: string): IHandlerFunc[];
-    _getOrCreateConstructionSet(fn: Function, targetKey: string): ConstructionInfo;
-    _createConstructionSet(fn: Function, targetKey: string): ConstructionInfo;
+    private _getOrCreateEntry(key);
+    private _getOrCreateConstructionSet(fn, targetKey);
+    private _createConstructionSet(fn, targetKey);
 }

@@ -1,4 +1,5 @@
-/* global global:true */
+declare var global:any;
+
 const theGlobal = (function() {
   // Workers don’t have `window`, only `self`
   if (typeof self !== 'undefined') {

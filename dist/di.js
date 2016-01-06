@@ -1,4 +1,4 @@
-/******/ (function(modules) { // webpackBootstrap
+define("di", [], function() { return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -294,6 +294,13 @@
 	        childContainer.parent = this;
 	        return childContainer;
 	    };
+
+	    /**
+	     * Resolve dependencies for the given function
+	     * @method resolveDependencies
+	     * @param {Function} fn
+	     * @return {Array<any>}
+	     */
 
 	    DIContainer.prototype.resolveDependencies = function resolveDependencies(fn, targetKey) {
 	        var info = this._getOrCreateConstructionSet(fn, targetKey),
@@ -798,8 +805,7 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {/* global global:true */
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
 	    value: true
@@ -1174,4 +1180,4 @@
 	_metaIndex.Decorators.configure.parameterizedDecorator('factory', factory);
 
 /***/ }
-/******/ ]);
+/******/ ])});;

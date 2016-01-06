@@ -8,6 +8,10 @@
   },
   "author": "Rasmus Kildevæld <rasmuskildevaeld@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://kildevaeld@github.com/kildevaeld/dijs.git"
+  },
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
@@ -18,9 +22,6 @@
     "mocha": "^2.3.3",
     "should": "^7.1.0",
     "typescript": "^1.8.0-dev.20151124"
-  },
-  "typescript": {
-    "definition": "di.d.ts"
   },
   "jspm": {
     "main": "./dist/di.js"

@@ -1,0 +1,25 @@
+{
+  "name": "di",
+  "description": "",
+  "main": "dist/di.js",
+  "authors": [
+    "Rasmus Kildevæld <rasmuskildevaeld@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "di",
+    "container",
+    "ioc"
+  ],
+  "homepage": "https://github.com/kildevaeld/dijs",
+  "moduleType": [
+    "amd"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
