@@ -66,7 +66,7 @@ define("di", [], function() { return /******/ (function(modules) { // webpackBoo
 	        }
 	    });
 	}
-	var Version = '0.0.6';
+	var Version = '0.0.7';
 	exports.Version = Version;
 
 	var _container = __webpack_require__(1);
@@ -146,12 +146,6 @@ define("di", [], function() { return /******/ (function(modules) { // webpackBoo
 	exports.DIBadKeyError = DIBadKeyError;
 	var emptyParameters = Object.freeze([]);
 	exports.emptyParameters = emptyParameters;
-	var instanceActivatorKey = "moby:instance-activator";
-	var registrationKey = "moby:registration";
-	var dependencyResolverKey = "moby:dependency-resolver";
-	_metaMetadata.Metadata.instanceActivator = instanceActivatorKey;
-	_metaMetadata.Metadata.registration = registrationKey;
-	_metaMetadata.Metadata.dependencyResolver = dependencyResolverKey;
 
 	var DIContainer = (function () {
 	    function DIContainer(info) {
@@ -180,7 +174,7 @@ define("di", [], function() { return /******/ (function(modules) { // webpackBoo
 	            throw new DIBadKeyError('no key');
 	        }
 	        if (typeof fn === 'function') {
-	            registration = _metaMetadata.Metadata.get(registrationKey, fn, targetKey);
+	            registration = _metaMetadata.Metadata.get(_metaMetadata.Metadata.registration, fn, targetKey);
 	            if (registration !== undefined) {
 	                registration.register(this, key || fn, fn);
 	            } else {
@@ -399,7 +393,8 @@ define("di", [], function() { return /******/ (function(modules) { // webpackBoo
 	    DIContainer.prototype._createConstructionSet = function _createConstructionSet(fn, targetKey) {
 	        var info = {
 	            activator: _metaMetadata.Metadata.getOwn(_metaMetadata.Metadata.instanceActivator, fn, targetKey) || _metadata.ClassActivator.instance,
-	            dependencyResolver: _metaMetadata.Metadata.getOwn(dependencyResolverKey, fn, targetKey) || this };
+	            dependencyResolver: _metaMetadata.Metadata.getOwn(_metaMetadata.Metadata.dependencyResolver, fn, targetKey) || this
+	        };
 	        if (fn.inject !== undefined) {
 	            if (typeof fn.inject === 'function') {
 	                info.keys = fn.inject();
@@ -828,6 +823,7 @@ define("di", [], function() { return /******/ (function(modules) { // webpackBoo
 	})();
 	var emptyMetadata = Object.freeze({});
 	var metadataContainerKey = '__metadata__';
+	exports.metadataContainerKey = metadataContainerKey;
 	if (typeof theGlobal.System === 'undefined') {
 	    theGlobal.System = { isFake: true };
 	}
@@ -886,6 +882,9 @@ define("di", [], function() { return /******/ (function(modules) { // webpackBoo
 	    noop: function noop() {},
 	    paramTypes: 'design:paramtypes',
 	    properties: 'design:properties',
+	    instanceActivator: 'di:instance-activator',
+	    registration: 'di:registration',
+	    dependencyResolver: 'di:dependency-resolver',
 	    get: function get(metadataKey, target, targetKey) {
 	        if (!target) {
 	            return undefined;

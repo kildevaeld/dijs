@@ -51,14 +51,6 @@ export interface ConstructionInfo {
 export var emptyParameters = Object.freeze([]);
 
 
-const instanceActivatorKey = "moby:instance-activator";
-const registrationKey = "moby:registration";
-const dependencyResolverKey = "moby:dependency-resolver";
-
-(<any>Metadata).instanceActivator =  instanceActivatorKey;
-(<any>Metadata).registration = registrationKey;
-(<any>Metadata).dependencyResolver = dependencyResolverKey;
-
 export class DIContainer implements IActivator {
   static instance: DIContainer
   targetKey: string
@@ -100,7 +92,7 @@ export class DIContainer implements IActivator {
     }
     if(typeof fn === 'function'){
 
-      registration = Metadata.get(registrationKey, fn, targetKey);
+      registration = Metadata.get(Metadata.registration, fn, targetKey);
 
       if(registration !== undefined){
         registration.register(this, key || fn, fn);
@@ -226,7 +218,7 @@ export class DIContainer implements IActivator {
   /**
    * Resolve dependencies for the given function
    * @method resolveDependencies
-   * @param {Function} fn 
+   * @param {Function} fn
    * @return {Array<any>}
    */
   public resolveDependencies (fn:Function, targetKey?:string): any[] {
@@ -336,10 +328,8 @@ export class DIContainer implements IActivator {
   private _createConstructionSet(fn:Function, targetKey:string): ConstructionInfo {
     let info: ConstructionInfo = {
       activator:<IActivator>Metadata.getOwn((<any>Metadata).instanceActivator, fn, targetKey)||ClassActivator.instance,
-      dependencyResolver: <IDependencyResolver>Metadata.getOwn(dependencyResolverKey,fn,targetKey)||this};
-
-
-
+      dependencyResolver: <IDependencyResolver>Metadata.getOwn(Metadata.dependencyResolver,fn,targetKey)||this
+    };
 
     if ((<any>fn).inject !== undefined) {
       if (typeof (<any>fn).inject === 'function') {

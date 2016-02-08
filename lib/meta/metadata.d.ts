@@ -1,3 +1,4 @@
+export declare const metadataContainerKey: string;
 export interface MetadataType {
     global: Object;
     noop: Function;
@@ -16,6 +17,9 @@ export declare var Metadata: {
     noop: () => void;
     paramTypes: string;
     properties: string;
+    instanceActivator: string;
+    registration: string;
+    dependencyResolver: string;
     get(metadataKey: string, target: Function, targetKey?: string): Object;
     getOwn(metadataKey: string, target: Function, targetKey?: string): Object;
     define(metadataKey: string, metadataValue: Object, target: Function, targetKey?: string): void;

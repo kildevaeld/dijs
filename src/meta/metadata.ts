@@ -16,7 +16,7 @@ const theGlobal = (function() {
 })();
 
 const emptyMetadata = Object.freeze({});
-const metadataContainerKey = '__metadata__';
+export const metadataContainerKey = '__metadata__';
 
 if(typeof theGlobal.System === 'undefined'){
   theGlobal.System = { isFake:true };
@@ -95,8 +95,12 @@ export interface MetadataType {
 export var Metadata  = {
   global: theGlobal,
   noop: function(){},
+
   paramTypes:'design:paramtypes',
   properties:'design:properties',
+  instanceActivator: 'di:instance-activator',
+  registration: 'di:registration',
+  dependencyResolver: 'di:dependency-resolver',
 
   get(metadataKey : string, target : Function, targetKey?: string) : Object {
 
