@@ -1,6 +1,6 @@
 {
-  "name": "di",
-  "version": "0.0.7",
+  "name": "stick.di",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "type": "git",
     "url": "https://kildevaeld@github.com/kildevaeld/dijs.git"
   },
+  
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
@@ -31,5 +32,8 @@
     "di",
     "container",
     "ioc"
-  ]
+  ],
+  "dependencies": {
+    "debug": "^2.2.0"
+  }
 }

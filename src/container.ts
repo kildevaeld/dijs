@@ -1,7 +1,15 @@
+/// <reference path="../typings/browser.d.ts" />
+declare var require: any
 
 import {ClassActivator, FactoryActivator, Resolver} from './metadata';
 import {Metadata} from './meta/metadata';
 import {DIAggregateError, createError, DIError} from './errors';
+
+const debug = require('debug')('stick:di');
+var idCounter = 0;
+function gen_id(): string {
+    return "di" + (++idCounter);
+}
 
 const paramRegEx = /function[^(]*\(([^)]*)\)/i;
 
@@ -53,10 +61,11 @@ export var emptyParameters = Object.freeze([]);
 
 export class DIContainer implements IActivator {
   static instance: DIContainer
-  targetKey: string
-  entries: Map<any, IHandlerFunc[]>
-  constructionInfo: Map<Function, ConstructionInfo>
-  parent: DIContainer
+  targetKey: string;
+  entries: Map<any, IHandlerFunc[]>;
+  constructionInfo: Map<Function, ConstructionInfo>;
+  private _id: string;
+  parent: DIContainer;
 
   get root (): DIContainer {
     let root : DIContainer = this, tmp : DIContainer = root
@@ -66,15 +75,23 @@ export class DIContainer implements IActivator {
     }
     return root
   }
+  
+  get id (): string {
+      return this._id;
+  }
 
   constructor (info?:Map<Function, ConstructionInfo>) {
+    
+    this._id = gen_id();
     this.entries = new Map<any,IHandlerFunc[]>();
     this.constructionInfo = info||new Map<Function, ConstructionInfo>();
+    debug("Creating new container: %s", this.id);
   }
 
   makeGlobal (): DIContainer {
+    debug("%s: Make global", this.id);
     DIContainer.instance = this;
-    return this
+    return this;
   }
 
   /**
@@ -111,6 +128,7 @@ export class DIContainer implements IActivator {
   * @param {Object} key The key that identifies the dependency at resolution time; usually a constructor function.
   */
   unregister(key : any) : void {
+    debug('%s: Unregister key: %s', this.id, key);
     this.entries.delete(key);
   }
 
@@ -140,6 +158,7 @@ export class DIContainer implements IActivator {
   * @return {Object} Returns the resolved instance.
   */
   get(key: any, targetKey?:string) : any {
+    debug("%s: Get %s, target: %s", this.id, key, targetKey);
     var entry;
 
     if (key === null || key === undefined){
@@ -162,17 +181,18 @@ export class DIContainer implements IActivator {
 
 
     if(this.parent && this.parent.hasHandler(key)){
-      return this.parent.get(key, targetKey)
+      debug("%s: found key '%s' on parent", this.id, key);
+      return this.parent.get(key, targetKey);
     }
 
     // No point in registrering a string
     if (typeof key === 'string') {
-      throw createError('DIResolveError','no component registered for key: ' + key)
+      throw createError('DIResolveError','no component registered for key: ' + key);
     }
 
     this.autoRegister(key, targetKey);
     entry = this.entries.get(key);
-
+    
     return entry[0](this);
   }
 
@@ -210,8 +230,10 @@ export class DIContainer implements IActivator {
   * @return {Container} Returns a new container instance parented to this.
   */
   createChild() : DIContainer {
+    
     let childContainer = new DIContainer(this.constructionInfo);
     childContainer.parent = this;
+    debug("%s: Create child container: %s", this.id, childContainer.id);
     return childContainer;
   }
 
@@ -222,6 +244,7 @@ export class DIContainer implements IActivator {
    * @return {Array<any>}
    */
   public resolveDependencies (fn:Function, targetKey?:string): any[] {
+    debug("%s: Resolve dependencies for: %j", this.id, fn.name);
     var info = this._getOrCreateConstructionSet(fn, targetKey),
         keys = info.keys,
         args = new Array(keys.length);
@@ -264,7 +287,7 @@ export class DIContainer implements IActivator {
       if(deps !== undefined && Array.isArray(deps)){
         args = args.concat(deps);
       }
-
+      debug("%s: invoking '%s', with dependencies:", this.id, fn.name, args); 
       return (<any>info.activator).invoke(fn, args, targetKey, keys);
 
     } catch(e) {
@@ -280,14 +303,17 @@ export class DIContainer implements IActivator {
   }
 
   public registerInstance(key:any, instance:any) {
+    debug("%s: Register instance %s", this.id, key);
     this.registerHandler(key, x => instance);
   }
 
   public registerTransient(key:any, fn:Function, targetKey?:string) {
+    debug("%s: Register transient %s", this.id, key);
     this.registerHandler(key, x => x.invoke(fn, null, targetKey) )
   }
 
   public registerSingleton(key:any, fn:Function, targetKey?:string) {
+    debug("%s: Register singleton %s", this.id, key);
     var singleton;
     this.registerHandler(key, x => singleton|| (singleton = x.invoke(fn,null,targetKey) ))
   }

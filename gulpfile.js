@@ -40,7 +40,7 @@ gulp.task('build:webpack', ['build'], function () {
 		output: {
 			filename: 'di.js',
 			library: 'di',
-			libraryTarget: 'amd'
+			libraryTarget: 'umd'
 		}
 	}))
 	.pipe(gulp.dest('./dist'));
