@@ -99,7 +99,7 @@ export declare class DIContainer implements IActivator {
     registerTransient(key: any, fn: Function, targetKey?: string): void;
     registerSingleton(key: any, fn: Function, targetKey?: string): void;
     registerHandler(key: any, handler: IHandlerFunc): void;
-    private _getOrCreateEntry(key);
-    private _getOrCreateConstructionSet(fn, targetKey);
+    protected _getOrCreateEntry(key: string): IHandlerFunc[];
+    protected _getOrCreateConstructionSet(fn: Function, targetKey: string): ConstructionInfo;
     private _createConstructionSet(fn, targetKey);
 }

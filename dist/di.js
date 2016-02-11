@@ -99,7 +99,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/// <reference path="../typings/main.d.ts" />
+	/// <reference path="../typings/browser.d.ts" />
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -109,8 +109,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	exports.getFunctionParameters = getFunctionParameters;
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -122,11 +120,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _errors = __webpack_require__(4);
 
-	var _debug = __webpack_require__(5);
-
-	var Debug = _interopRequireWildcard(_debug);
-
-	console.log(Debug);
+	var debug = __webpack_require__(5)('stick:di');
+	var idCounter = 0;
+	function gen_id() {
+	    return "di" + ++idCounter;
+	}
 	var paramRegEx = /function[^(]*\(([^)]*)\)/i;
 
 	function getFunctionParameters(fn) {
@@ -169,11 +167,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function DIContainer(info) {
 	        _classCallCheck(this, DIContainer);
 
+	        this._id = gen_id();
 	        this.entries = new Map();
 	        this.constructionInfo = info || new Map();
+	        debug("Creating new container: %s", this.id);
 	    }
 
 	    DIContainer.prototype.makeGlobal = function makeGlobal() {
+	        debug("%s: Make global", this.id);
 	        DIContainer.instance = this;
 	        return this;
 	    };
@@ -211,6 +212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    */
 
 	    DIContainer.prototype.unregister = function unregister(key) {
+	        debug('%s: Unregister key: %s', this.id, key);
 	        this.entries['delete'](key);
 	    };
 
@@ -241,6 +243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    */
 
 	    DIContainer.prototype.get = function get(key, targetKey) {
+	        debug("%s: Get %s, target: %s", this.id, key, targetKey);
 	        var entry;
 	        if (key === null || key === undefined) {
 	            throw new DIBadKeyError();
@@ -256,6 +259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return entry[0](this);
 	        }
 	        if (this.parent && this.parent.hasHandler(key)) {
+	            debug("%s: found key '%s' on parent", this.id, key);
 	            return this.parent.get(key, targetKey);
 	        }
 	        // No point in registrering a string
@@ -304,6 +308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    DIContainer.prototype.createChild = function createChild() {
 	        var childContainer = new DIContainer(this.constructionInfo);
 	        childContainer.parent = this;
+	        debug("%s: Create child container: %s", this.id, childContainer.id);
 	        return childContainer;
 	    };
 
@@ -315,6 +320,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	    DIContainer.prototype.resolveDependencies = function resolveDependencies(fn, targetKey) {
+	        debug("%s: Resolve dependencies for: %j", this.id, fn.name);
 	        var info = this._getOrCreateConstructionSet(fn, targetKey),
 	            keys = info.keys,
 	            args = new Array(keys.length);
@@ -354,6 +360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (deps !== undefined && Array.isArray(deps)) {
 	                args = args.concat(deps);
 	            }
+	            debug("%s: invoking '%s', with dependencies:", this.id, fn.name, args);
 	            return info.activator.invoke(fn, args, targetKey, keys);
 	        } catch (e) {
 	            var activatingText = info.activator instanceof _metadata.ClassActivator ? 'instantiating' : 'invoking';
@@ -364,18 +371,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    DIContainer.prototype.registerInstance = function registerInstance(key, instance) {
+	        debug("%s: Register instance %s", this.id, key);
 	        this.registerHandler(key, function (x) {
 	            return instance;
 	        });
 	    };
 
 	    DIContainer.prototype.registerTransient = function registerTransient(key, fn, targetKey) {
+	        debug("%s: Register transient %s", this.id, key);
 	        this.registerHandler(key, function (x) {
 	            return x.invoke(fn, null, targetKey);
 	        });
 	    };
 
 	    DIContainer.prototype.registerSingleton = function registerSingleton(key, fn, targetKey) {
+	        debug("%s: Register singleton %s", this.id, key);
 	        var singleton;
 	        this.registerHandler(key, function (x) {
 	            return singleton || (singleton = x.invoke(fn, null, targetKey));
@@ -435,6 +445,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (tmp) root = tmp;
 	            }
 	            return root;
+	        }
+	    }, {
+	        key: 'id',
+	        get: function get() {
+	            return this._id;
 	        }
 	    }]);
 

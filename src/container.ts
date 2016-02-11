@@ -75,13 +75,13 @@ export class DIContainer implements IActivator {
     }
     return root
   }
-  
+
   get id (): string {
       return this._id;
   }
 
   constructor (info?:Map<Function, ConstructionInfo>) {
-    
+
     this._id = gen_id();
     this.entries = new Map<any,IHandlerFunc[]>();
     this.constructionInfo = info||new Map<Function, ConstructionInfo>();
@@ -192,7 +192,7 @@ export class DIContainer implements IActivator {
 
     this.autoRegister(key, targetKey);
     entry = this.entries.get(key);
-    
+
     return entry[0](this);
   }
 
@@ -230,7 +230,7 @@ export class DIContainer implements IActivator {
   * @return {Container} Returns a new container instance parented to this.
   */
   createChild() : DIContainer {
-    
+
     let childContainer = new DIContainer(this.constructionInfo);
     childContainer.parent = this;
     debug("%s: Create child container: %s", this.id, childContainer.id);
@@ -287,7 +287,7 @@ export class DIContainer implements IActivator {
       if(deps !== undefined && Array.isArray(deps)){
         args = args.concat(deps);
       }
-      debug("%s: invoking '%s', with dependencies:", this.id, fn.name, args); 
+      debug("%s: invoking '%s', with dependencies:", this.id, fn.name, args);
       return (<any>info.activator).invoke(fn, args, targetKey, keys);
 
     } catch(e) {
@@ -323,7 +323,7 @@ export class DIContainer implements IActivator {
   }
 
 
-  private _getOrCreateEntry (key:string): IHandlerFunc[]  {
+  protected _getOrCreateEntry (key:string): IHandlerFunc[]  {
     var entry;
 
     if (key === null || key === undefined){
@@ -341,7 +341,7 @@ export class DIContainer implements IActivator {
 
   }
 
-  private _getOrCreateConstructionSet(fn:Function, targetKey:string): ConstructionInfo {
+  protected _getOrCreateConstructionSet(fn:Function, targetKey:string): ConstructionInfo {
     var info = this.constructionInfo.get(fn)
 
     if (info === undefined) {
