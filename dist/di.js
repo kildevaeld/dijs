@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	}
-	var Version = '0.1.0';
+	var Version = '0.1.1';
 	exports.Version = Version;
 
 	var _container = __webpack_require__(1);
@@ -360,7 +360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (deps !== undefined && Array.isArray(deps)) {
 	                args = args.concat(deps);
 	            }
-	            debug("%s: invoking '%s', with dependencies:", this.id, fn.name, args);
+	            debug("%s: invoking '%s', with dependencies:", this.id, fn.name, info.keys);
 	            return info.activator.invoke(fn, args, targetKey, keys);
 	        } catch (e) {
 	            var activatingText = info.activator instanceof _metadata.ClassActivator ? 'instantiating' : 'invoking';

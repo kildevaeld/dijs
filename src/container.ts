@@ -287,7 +287,7 @@ export class DIContainer implements IActivator {
       if(deps !== undefined && Array.isArray(deps)){
         args = args.concat(deps);
       }
-      debug("%s: invoking '%s', with dependencies:", this.id, fn.name, args);
+      debug("%s: invoking '%s', with dependencies:", this.id, fn.name, info.keys);
       return (<any>info.activator).invoke(fn, args, targetKey, keys);
 
     } catch(e) {
