@@ -158,7 +158,7 @@ export class DIContainer implements IActivator {
   * @return {Object} Returns the resolved instance.
   */
   get(key: any, targetKey?:string) : any {
-    debug("%s: Get %s, target: %s", this.id, key, targetKey);
+    debug("%s: Get %s, target: %s", this.id, string(key), targetKey);
     var entry;
 
     if (key === null || key === undefined){
