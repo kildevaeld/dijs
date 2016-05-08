@@ -158,7 +158,7 @@ export class DIContainer implements IActivator {
   * @return {Object} Returns the resolved instance.
   */
   get(key: any, targetKey?:string) : any {
-    debug("%s: Get %s, target: %s", this.id, string(key), targetKey);
+    debug("%s: Get %s, target: %s", this.id, String(key), targetKey);
     var entry;
 
     if (key === null || key === undefined){
@@ -259,6 +259,7 @@ export class DIContainer implements IActivator {
      if (i < ii) {
         message += ` The argument at index ${i} (key:${keys[i]}) could not be satisfied.`;
       }
+     debug('resolve error %s', e)
      throw createError("DependencyError", message, [e]);
    }
 
@@ -294,7 +295,7 @@ export class DIContainer implements IActivator {
 
       var activatingText = info.activator instanceof ClassActivator ? 'instantiating' : 'invoking';
       var message = `Error ${activatingText} ${(<any>fn).name}.`
-
+      debug('invoke error %s', e)
       message += ' Check the inner error for details.'
 
       throw createError("DIInvokeError", message, [e]);

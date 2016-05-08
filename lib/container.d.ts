@@ -1,4 +1,3 @@
-/// <reference path="../typings/browser.d.ts" />
 import { DIError } from './errors';
 export declare function getFunctionParameters(fn: Function, cache?: boolean): string[];
 export declare class DIBadKeyError extends DIError {

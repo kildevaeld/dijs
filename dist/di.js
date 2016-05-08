@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	}
-	var Version = '0.1.1';
+	var Version = '0.1.3';
 	exports.Version = Version;
 
 	var _container = __webpack_require__(1);
@@ -243,7 +243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    */
 
 	    DIContainer.prototype.get = function get(key, targetKey) {
-	        debug("%s: Get %s, target: %s", this.id, key, targetKey);
+	        debug("%s: Get %s, target: %s", this.id, String(key), targetKey);
 	        var entry;
 	        if (key === null || key === undefined) {
 	            throw new DIBadKeyError();
@@ -334,6 +334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (i < ii) {
 	                message += ' The argument at index ' + i + ' (key:' + keys[i] + ') could not be satisfied.';
 	            }
+	            debug('resolve error %s', e);
 	            throw (0, _errors.createError)("DependencyError", message, [e]);
 	        }
 	        return args;
@@ -365,6 +366,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } catch (e) {
 	            var activatingText = info.activator instanceof _metadata.ClassActivator ? 'instantiating' : 'invoking';
 	            var message = 'Error ' + activatingText + ' ' + fn.name + '.';
+	            debug('invoke error %s', e);
 	            message += ' Check the inner error for details.';
 	            throw (0, _errors.createError)("DIInvokeError", message, [e]);
 	        }
@@ -993,8 +995,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.errors = errors;
 	    }
 
+	    /*toString (): string {
+	        return `[${this.name}: ${this.message}], errors:${this.errors}`
+	    }*/
+
 	    DIAggregateError.prototype.toString = function toString() {
-	        return "[" + this.name + ": " + this.message + "], errors:" + this.errors;
+	        var errors = this.errors;
+	        var error = undefined;
+	        while (errors.length > 0) {
+	            error = errors[errors.length - 1];
+	            errors = error.errors || [];
+	        }
+	        if (error == null) {
+	            return "[" + this.name + ": " + this.message + "]";
+	        } else {
+	            return String.prototype.toString.call(error);
+	        }
 	    };
 
 	    return DIAggregateError;
