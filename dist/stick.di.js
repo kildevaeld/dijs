@@ -54,59 +54,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _container = __webpack_require__(1);
-
-	Object.keys(_container).forEach(function (key) {
-	    if (key === "default" || key === "__esModule") return;
-	    Object.defineProperty(exports, key, {
-	        enumerable: true,
-	        get: function get() {
-	            return _container[key];
-	        }
-	    });
-	});
-
-	var _index = __webpack_require__(8);
-
-	Object.keys(_index).forEach(function (key) {
-	    if (key === "default" || key === "__esModule") return;
-	    Object.defineProperty(exports, key, {
-	        enumerable: true,
-	        get: function get() {
-	            return _index[key];
-	        }
-	    });
-	});
-
-	var _decorators = __webpack_require__(11);
-
-	Object.keys(_decorators).forEach(function (key) {
-	    if (key === "default" || key === "__esModule") return;
-	    Object.defineProperty(exports, key, {
-	        enumerable: true,
-	        get: function get() {
-	            return _decorators[key];
-	        }
-	    });
-	});
-
-	var _metadata = __webpack_require__(2);
-
-	Object.keys(_metadata).forEach(function (key) {
-	    if (key === "default" || key === "__esModule") return;
-	    Object.defineProperty(exports, key, {
-	        enumerable: true,
-	        get: function get() {
-	            return _metadata[key];
-	        }
-	    });
-	});
+	function __export(m) {
+	    for (var p in m) {
+	        if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	    }
+	}
 	function test() {}
 	if (!test.name) {
 	    Object.defineProperty(Function.prototype, 'name', {
@@ -119,34 +73,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    });
 	}
-	var Version = exports.Version = '0.1.3';
+	exports.Version = '0.1.3';
+	__export(__webpack_require__(1));
+	__export(__webpack_require__(8));
+	__export(__webpack_require__(11));
+	__export(__webpack_require__(2));
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.DIContainer = exports.emptyParameters = exports.DIBadKeyError = undefined;
+	"use strict";
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	exports.getFunctionParameters = getFunctionParameters;
-
-	var _metadata = __webpack_require__(2);
-
-	var _metadata2 = __webpack_require__(3);
-
-	var _errors = __webpack_require__(4);
-
-	var _debug = __webpack_require__(5);
-
-	var Debug = _interopRequireWildcard(_debug);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -154,6 +93,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var metadata_1 = __webpack_require__(2);
+	var metadata_2 = __webpack_require__(3);
+	var errors_1 = __webpack_require__(4);
+	var Debug = __webpack_require__(5);
 	var debug = Debug('stick:di');
 	var idCounter = 0;
 	function gen_id() {
@@ -163,7 +106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function getFunctionParameters(fn) {
 	    var cache = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
-	    var params = _metadata2.Metadata.getOwn(_metadata2.Metadata.paramTypes, fn);
+	    var params = metadata_2.Metadata.getOwn(metadata_2.Metadata.paramTypes, fn);
 	    if (!params) {
 	        var match = fn.toString().match(paramRegEx);
 	        if (match) {
@@ -172,14 +115,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }).filter(function (m) {
 	                return m !== '';
 	            });
-	            if (cache) _metadata2.Metadata.define(_metadata2.Metadata.paramTypes, params, fn, undefined);
+	            if (cache) metadata_2.Metadata.define(metadata_2.Metadata.paramTypes, params, fn, undefined);
 	        }
 	    }
 	    return params || [];
 	}
+	exports.getFunctionParameters = getFunctionParameters;
 
-	var DIBadKeyError = exports.DIBadKeyError = function (_DIError) {
-	    _inherits(DIBadKeyError, _DIError);
+	var DIBadKeyError = function (_errors_1$DIError) {
+	    _inherits(DIBadKeyError, _errors_1$DIError);
 
 	    function DIBadKeyError(message) {
 	        _classCallCheck(this, DIBadKeyError);
@@ -192,11 +136,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    return DIBadKeyError;
-	}(_errors.DIError);
+	}(errors_1.DIError);
 
-	var emptyParameters = exports.emptyParameters = Object.freeze([]);
+	exports.DIBadKeyError = DIBadKeyError;
+	exports.emptyParameters = Object.freeze([]);
 
-	var DIContainer = exports.DIContainer = function () {
+	var DIContainer = function () {
 	    function DIContainer(info) {
 	        _classCallCheck(this, DIContainer);
 
@@ -229,7 +174,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw new DIBadKeyError('no key');
 	            }
 	            if (typeof fn === 'function') {
-	                registration = _metadata2.Metadata.get(_metadata2.Metadata.registration, fn, targetKey);
+	                registration = metadata_2.Metadata.get(metadata_2.Metadata.registration, fn, targetKey);
 	                if (registration !== undefined) {
 	                    registration.register(this, key || fn, fn);
 	                } else {
@@ -290,7 +235,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (key === DIContainer) {
 	                return this;
 	            }
-	            if (key instanceof _metadata.Resolver) {
+	            if (key instanceof metadata_1.Resolver) {
 	                return key.get(this);
 	            }
 	            entry = this.entries.get(key);
@@ -303,7 +248,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            // No point in registrering a string
 	            if (typeof key === 'string') {
-	                throw (0, _errors.createError)('DIResolveError', 'no component registered for key: ' + key);
+	                throw errors_1.createError('DIResolveError', 'no component registered for key: ' + key);
 	            }
 	            this.autoRegister(key, targetKey);
 	            entry = this.entries.get(key);
@@ -377,7 +322,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    message += ' The argument at index ' + i + ' (key:' + keys[i] + ') could not be satisfied.';
 	                }
 	                debug('resolve error %s', e);
-	                throw (0, _errors.createError)("DependencyError", message, [e]);
+	                throw errors_1.createError("DependencyError", message, [e]);
 	            }
 	            return args;
 	        }
@@ -407,11 +352,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                debug("%s: invoking '%s', with dependencies:", this.id, fn.name, info.keys);
 	                return info.activator.invoke(fn, args, targetKey, keys);
 	            } catch (e) {
-	                var activatingText = info.activator instanceof _metadata.ClassActivator ? 'instantiating' : 'invoking';
+	                var activatingText = info.activator instanceof metadata_1.ClassActivator ? 'instantiating' : 'invoking';
 	                var message = 'Error ' + activatingText + ' ' + fn.name + '.';
 	                debug('invoke error %s', e);
 	                message += ' Check the inner error for details.';
-	                throw (0, _errors.createError)("DIInvokeError", message, [e]);
+	                throw errors_1.createError("DIInvokeError", message, [e]);
 	            }
 	        }
 	    }, {
@@ -449,7 +394,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _getOrCreateEntry(key) {
 	            var entry;
 	            if (key === null || key === undefined) {
-	                throw new _errors.DIError('key cannot be null or undefined.  (Are you trying to inject something that doesn\'t exist with DI?)');
+	                throw new errors_1.DIError('key cannot be null or undefined.  (Are you trying to inject something that doesn\'t exist with DI?)');
 	            }
 	            entry = this.entries.get(key);
 	            if (entry === undefined) {
@@ -472,8 +417,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: '_createConstructionSet',
 	        value: function _createConstructionSet(fn, targetKey) {
 	            var info = {
-	                activator: _metadata2.Metadata.getOwn(_metadata2.Metadata.instanceActivator, fn, targetKey) || _metadata.ClassActivator.instance,
-	                dependencyResolver: _metadata2.Metadata.getOwn(_metadata2.Metadata.dependencyResolver, fn, targetKey) || this
+	                activator: metadata_2.Metadata.getOwn(metadata_2.Metadata.instanceActivator, fn, targetKey) || metadata_1.ClassActivator.instance,
+	                dependencyResolver: metadata_2.Metadata.getOwn(metadata_2.Metadata.dependencyResolver, fn, targetKey) || this
 	            };
 	            if (fn.inject !== undefined) {
 	                if (typeof fn.inject === 'function') {
@@ -483,7 +428,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	                return info;
 	            }
-	            info.keys = _metadata2.Metadata.getOwn(_metadata2.Metadata.paramTypes, fn, targetKey) || getFunctionParameters(fn) || emptyParameters;
+	            info.keys = metadata_2.Metadata.getOwn(metadata_2.Metadata.paramTypes, fn, targetKey) || getFunctionParameters(fn) || exports.emptyParameters;
 	            return info;
 	        }
 	    }, {
@@ -507,15 +452,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return DIContainer;
 	}();
 
+	exports.DIContainer = DIContainer;
+
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
+	"use strict";
+	/**
+	* Used to allow functions/classes to indicate that they should be registered as transients with the container.
+	*
+	* @class TransientRegistration
+	* @constructor
+	* @param {Object} [key] The key to register as.
+	*/
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -525,14 +475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	/**
-	* Used to allow functions/classes to indicate that they should be registered as transients with the container.
-	*
-	* @class TransientRegistration
-	* @constructor
-	* @param {Object} [key] The key to register as.
-	*/
-	var TransientRegistration = exports.TransientRegistration = function () {
+	var TransientRegistration = function () {
 	    function TransientRegistration(key) {
 	        _classCallCheck(this, TransientRegistration);
 
@@ -557,6 +500,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return TransientRegistration;
 	}();
+
+	exports.TransientRegistration = TransientRegistration;
 	/**
 	* Used to allow functions/classes to indicate that they should be registered as singletons with the container.
 	*
@@ -565,8 +510,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @param {Object} [key] The key to register as.
 	*/
 
-
-	var SingletonRegistration = exports.SingletonRegistration = function () {
+	var SingletonRegistration = function () {
 	    function SingletonRegistration(keyOrRegisterInChild) {
 	        var registerInChild = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
@@ -599,6 +543,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return SingletonRegistration;
 	}();
+
+	exports.SingletonRegistration = SingletonRegistration;
 	/**
 	* An abstract resolver used to allow functions/classes to specify custom dependency resolution logic.
 	*
@@ -606,8 +552,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @constructor
 	*/
 
-
-	var Resolver = exports.Resolver = function () {
+	var Resolver = function () {
 	    function Resolver() {
 	        _classCallCheck(this, Resolver);
 	    }
@@ -629,6 +574,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return Resolver;
 	}();
+
+	exports.Resolver = Resolver;
 	/**
 	* Used to allow functions/classes to specify lazy resolution logic.
 	*
@@ -638,8 +585,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @param {Object} key The key to lazily resolve.
 	*/
 
-
-	var Lazy = exports.Lazy = function (_Resolver) {
+	var Lazy = function (_Resolver) {
 	    _inherits(Lazy, _Resolver);
 
 	    function Lazy(key) {
@@ -686,6 +632,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return Lazy;
 	}(Resolver);
+
+	exports.Lazy = Lazy;
 	/**
 	* Used to allow functions/classes to specify resolution of all matches to a key.
 	*
@@ -695,8 +643,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @param {Object} key The key to lazily resolve all matches for.
 	*/
 
-
-	var All = exports.All = function (_Resolver2) {
+	var All = function (_Resolver2) {
 	    _inherits(All, _Resolver2);
 
 	    function All(key) {
@@ -739,6 +686,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return All;
 	}(Resolver);
+
+	exports.All = All;
 	/**
 	* Used to allow functions/classes to specify an optional dependency, which will be resolved only if already registred with the container.
 	*
@@ -749,8 +698,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @param {Boolean} [checkParent=false] Indicates whether or not the parent container hierarchy should be checked.
 	*/
 
-
-	var Optional = exports.Optional = function (_Resolver3) {
+	var Optional = function (_Resolver3) {
 	    _inherits(Optional, _Resolver3);
 
 	    function Optional(key) {
@@ -802,6 +750,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return Optional;
 	}(Resolver);
+
+	exports.Optional = Optional;
 	/**
 	* Used to inject the dependency from the parent container instead of the current one.
 	*
@@ -811,8 +761,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @param {Object} key The key to resolve from the parent container.
 	*/
 
-
-	var Parent = exports.Parent = function (_Resolver4) {
+	var Parent = function (_Resolver4) {
 	    _inherits(Parent, _Resolver4);
 
 	    function Parent(key) {
@@ -855,6 +804,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return Parent;
 	}(Resolver);
+
+	exports.Parent = Parent;
 	/**
 	* Used to instantiate a class.
 	*
@@ -862,8 +813,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @constructor
 	*/
 
-
-	var ClassActivator = exports.ClassActivator = function () {
+	var ClassActivator = function () {
 	    function ClassActivator() {
 	        _classCallCheck(this, ClassActivator);
 	    }
@@ -879,6 +829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 	ClassActivator.instance = new ClassActivator();
+	exports.ClassActivator = ClassActivator;
 	/**
 	* Used to invoke a factory method.
 	*
@@ -886,7 +837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @constructor
 	*/
 
-	var FactoryActivator = exports.FactoryActivator = function () {
+	var FactoryActivator = function () {
 	    function FactoryActivator() {
 	        _classCallCheck(this, FactoryActivator);
 	    }
@@ -902,16 +853,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 	FactoryActivator.instance = new FactoryActivator();
+	exports.FactoryActivator = FactoryActivator;
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
+	/* WEBPACK VAR INJECTION */(function(global) {"use strict";
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
@@ -930,7 +878,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return new Function('return this')();
 	}();
 	var emptyMetadata = Object.freeze({});
-	var metadataContainerKey = exports.metadataContainerKey = '__metadata__';
+	exports.metadataContainerKey = '__metadata__';
 	if (typeof theGlobal.System === 'undefined') {
 	    theGlobal.System = { isFake: true };
 	}
@@ -942,12 +890,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	if (typeof theGlobal.Reflect.getOwnMetadata === 'undefined') {
 	    Reflect.getOwnMetadata = function (metadataKey, target, targetKey) {
-	        return ((target[metadataContainerKey] || emptyMetadata)[targetKey] || emptyMetadata)[metadataKey];
+	        return ((target[exports.metadataContainerKey] || emptyMetadata)[targetKey] || emptyMetadata)[metadataKey];
 	    };
 	}
 	if (typeof theGlobal.Reflect.defineMetadata === 'undefined') {
 	    Reflect.defineMetadata = function (metadataKey, metadataValue, target, targetKey) {
-	        var metadataContainer = target.hasOwnProperty(metadataContainerKey) ? target[metadataContainerKey] : target[metadataContainerKey] = {};
+	        var metadataContainer = target.hasOwnProperty(exports.metadataContainerKey) ? target[exports.metadataContainerKey] : target[exports.metadataContainerKey] = {};
 	        var targetContainer = metadataContainer[targetKey] || (metadataContainer[targetKey] = {});
 	        targetContainer[metadataKey] = metadataValue;
 	    };
@@ -984,7 +932,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @class Metadata
 	* @static
 	*/
-	var Metadata = exports.Metadata = {
+	exports.Metadata = {
 	    global: theGlobal,
 	    noop: function noop() {},
 	    paramTypes: 'design:paramtypes',
@@ -996,8 +944,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!target) {
 	            return undefined;
 	        }
-	        var result = Metadata.getOwn(metadataKey, target, targetKey);
-	        return result === undefined ? Metadata.get(metadataKey, Object.getPrototypeOf(target), targetKey) : result;
+	        var result = exports.Metadata.getOwn(metadataKey, target, targetKey);
+	        return result === undefined ? exports.Metadata.get(metadataKey, Object.getPrototypeOf(target), targetKey) : result;
 	    },
 	    getOwn: function getOwn(metadataKey, target, targetKey) {
 	        if (!target) {
@@ -1012,7 +960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        Reflect.defineMetadata(metadataKey, metadataValue, target, targetKey);
 	    },
 	    getOrCreateOwn: function getOrCreateOwn(metadataKey, Type, target, targetKey) {
-	        var result = Metadata.getOwn(metadataKey, target, targetKey);
+	        var result = exports.Metadata.getOwn(metadataKey, target, targetKey);
 	        if (result === undefined) {
 	            result = new Type();
 	            Reflect.defineMetadata(metadataKey, result, target, targetKey);
@@ -1028,13 +976,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	exports.createError = createError;
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1042,7 +984,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var DIError = exports.DIError = function (_Error) {
+	var DIError = function (_Error) {
 	    _inherits(DIError, _Error);
 
 	    function DIError(message) {
@@ -1064,7 +1006,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return DIError;
 	}(Error);
 
-	var DIAggregateError = exports.DIAggregateError = function (_DIError) {
+	exports.DIError = DIError;
+
+	var DIAggregateError = function (_DIError) {
 	    _inherits(DIAggregateError, _DIError);
 
 	    function DIAggregateError(message, errors) {
@@ -1100,6 +1044,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return DIAggregateError;
 	}(DIError);
 
+	exports.DIAggregateError = DIAggregateError;
 	function createError(name, message, errors) {
 	    var e = void 0;
 	    if (errors) {
@@ -1110,6 +1055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    e.name = name;
 	    return e;
 	}
+	exports.createError = createError;
 
 /***/ },
 /* 5 */
@@ -1623,66 +1569,40 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _metadata = __webpack_require__(3);
-
-	Object.keys(_metadata).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _metadata[key];
+	function __export(m) {
+	    for (var p in m) {
+	        if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	    }
-	  });
-	});
-
-	var _decorators = __webpack_require__(9);
-
-	Object.keys(_decorators).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _decorators[key];
-	    }
-	  });
-	});
+	}
+	__export(__webpack_require__(3));
+	__export(__webpack_require__(9));
 
 /***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.Decorators = undefined;
-
-	var _decoratorApplicator = __webpack_require__(10);
-
-	var Decorators = exports.Decorators = {
+	var decorator_applicator_1 = __webpack_require__(10);
+	exports.Decorators = {
 	    configure: {
 	        parameterizedDecorator: function parameterizedDecorator(name, decorator) {
-	            Decorators[name] = function () {
-	                var applicator = new _decoratorApplicator.DecoratorApplicator();
+	            exports.Decorators[name] = function () {
+	                var applicator = new decorator_applicator_1.DecoratorApplicator();
 	                return applicator[name].apply(applicator, arguments);
 	            };
-	            _decoratorApplicator.DecoratorApplicator.prototype[name] = function () {
+	            decorator_applicator_1.DecoratorApplicator.prototype[name] = function () {
 	                var result = decorator.apply(null, arguments);
 	                return this.decorator(result);
 	            };
 	        },
 	        simpleDecorator: function simpleDecorator(name, decorator) {
-	            Decorators[name] = function () {
-	                return new _decoratorApplicator.DecoratorApplicator().decorator(decorator);
+	            exports.Decorators[name] = function () {
+	                return new decorator_applicator_1.DecoratorApplicator().decorator(decorator);
 	            };
-	            _decoratorApplicator.DecoratorApplicator.prototype[name] = function () {
+	            decorator_applicator_1.DecoratorApplicator.prototype[name] = function () {
 	                return this.decorator(decorator);
 	            };
 	        }
@@ -1694,10 +1614,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1765,31 +1681,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.autoinject = autoinject;
-	exports.inject = inject;
-	exports.registration = registration;
-	exports.transient = transient;
-	exports.singleton = singleton;
-	exports.instanceActivator = instanceActivator;
-	exports.factory = factory;
-
-	var _index = __webpack_require__(8);
-
-	var _metadata = __webpack_require__(2);
-
-	var _container = __webpack_require__(1);
-
+	var index_1 = __webpack_require__(8);
+	var metadata_1 = __webpack_require__(2);
+	var container_1 = __webpack_require__(1);
 	function autoinject(target) {
 	    var deco = function deco(target) {
-	        target.inject = _index.Metadata.getOwn(_index.Metadata.paramTypes, target) || _container.emptyParameters;
+	        target.inject = index_1.Metadata.getOwn(index_1.Metadata.paramTypes, target) || container_1.emptyParameters;
 	    };
 	    return target ? deco(target) : deco;
 	}
+	exports.autoinject = autoinject;
 	function inject() {
 	    for (var _len = arguments.length, rest = Array(_len), _key = 0; _key < _len; _key++) {
 	        rest[_key] = arguments[_key];
@@ -1799,35 +1702,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	        target.inject = rest;
 	    };
 	}
+	exports.inject = inject;
 	function registration(value, targetKey) {
 	    return function (target) {
-	        _index.Metadata.define(_index.Metadata.registration, value, target, targetKey);
+	        index_1.Metadata.define(index_1.Metadata.registration, value, target, targetKey);
 	    };
 	}
+	exports.registration = registration;
 	function transient(key, targetKey) {
-	    return registration(new _metadata.TransientRegistration(key), targetKey);
+	    return registration(new metadata_1.TransientRegistration(key), targetKey);
 	}
+	exports.transient = transient;
 	function singleton(keyOrRegisterInChild) {
 	    var registerInChild = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 	    var targetKey = arguments[2];
 
-	    return registration(new _metadata.SingletonRegistration(keyOrRegisterInChild, registerInChild), targetKey);
+	    return registration(new metadata_1.SingletonRegistration(keyOrRegisterInChild, registerInChild), targetKey);
 	}
+	exports.singleton = singleton;
 	function instanceActivator(value, targetKey) {
 	    return function (target) {
-	        _index.Metadata.define(_index.Metadata.instanceActivator, value, target, targetKey);
+	        index_1.Metadata.define(index_1.Metadata.instanceActivator, value, target, targetKey);
 	    };
 	}
+	exports.instanceActivator = instanceActivator;
 	function factory() {
-	    return instanceActivator(_metadata.FactoryActivator.instance);
+	    return instanceActivator(metadata_1.FactoryActivator.instance);
 	}
-	_index.Decorators.configure.simpleDecorator('autoinject', autoinject);
-	_index.Decorators.configure.parameterizedDecorator('inject', inject);
-	_index.Decorators.configure.parameterizedDecorator('registration', registration);
-	_index.Decorators.configure.parameterizedDecorator('transient', transient);
-	_index.Decorators.configure.parameterizedDecorator('singleton', singleton);
-	_index.Decorators.configure.parameterizedDecorator('instanceActivator', instanceActivator);
-	_index.Decorators.configure.parameterizedDecorator('factory', factory);
+	exports.factory = factory;
+	index_1.Decorators.configure.simpleDecorator('autoinject', autoinject);
+	index_1.Decorators.configure.parameterizedDecorator('inject', inject);
+	index_1.Decorators.configure.parameterizedDecorator('registration', registration);
+	index_1.Decorators.configure.parameterizedDecorator('transient', transient);
+	index_1.Decorators.configure.parameterizedDecorator('singleton', singleton);
+	index_1.Decorators.configure.parameterizedDecorator('instanceActivator', instanceActivator);
+	index_1.Decorators.configure.parameterizedDecorator('factory', factory);
 
 /***/ }
 /******/ ])
