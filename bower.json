@@ -1,7 +1,7 @@
 {
-  "name": "di",
+  "name": "stick.di",
   "description": "",
-  "main": "dist/di.js",
+  "main": "dist/stick.di.js",
   "authors": [
     "Rasmus Kildevæld <rasmuskildevaeld@gmail.com>"
   ],
@@ -11,7 +11,7 @@
     "container",
     "ioc"
   ],
-  "homepage": "https://github.com/kildevaeld/dijs",
+  "homepage": "https://github.com/kildevaeld/stick.di",
   "moduleType": [
     "amd"
   ],

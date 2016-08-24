@@ -20,6 +20,7 @@
         "!./node_modules/**/*.ts"
     ],
     "files": [
+        "typings/index.d.ts",
         "./src/index.ts",
         "./src/container.ts",
         "./src/decorators.ts",

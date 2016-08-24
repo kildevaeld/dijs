@@ -1,11 +1,11 @@
-/// <reference path="../typings/browser.d.ts" />
-declare var require: any
+
 
 import {ClassActivator, FactoryActivator, Resolver} from './metadata';
 import {Metadata} from './meta/metadata';
 import {DIAggregateError, createError, DIError} from './errors';
+import * as Debug from 'debug';
+const debug = Debug('stick:di');
 
-const debug = require('debug')('stick:di');
 var idCounter = 0;
 function gen_id(): string {
     return "di" + (++idCounter);

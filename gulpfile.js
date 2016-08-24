@@ -5,15 +5,12 @@ const gulp = require('gulp'),
 	babel = require('gulp-babel'),
 	merge = require('merge2'),
 	replace = require('gulp-replace'),
-	webpack = require('gulp-webpack');
+	webpack = require('webpack-stream');
 
 const pkgjson = require('./package.json');
 
 const tsp = tsc.createProject('./tsconfig.json', {
-	declarationFiles: true,
-	target: 'es6',
-	modules: 'commonjs',
-	typescript: require('typescript')
+	
 });
 
 gulp.task('build', function () {
@@ -23,8 +20,9 @@ gulp.task('build', function () {
 
 	return merge([
 		result.js.pipe(babel({
-			blacklist: ['regenerator'],
-			loose: ['es6.classes']
+			presets: ['es2015']
+			//blacklist: ['regenerator'],
+			//loose: ['es6.classes']
 		}))
 			.pipe(replace('<%version%>', pkgjson.version))
 			.pipe(gulp.dest('./lib')),
@@ -33,13 +31,34 @@ gulp.task('build', function () {
 
 });
 
+
+
+gulp.task('build:jspm', function () {
+
+	const tsp = tsc.createProject('./tsconfig.json', {
+		target: 'es6',
+		module: 'amd',
+	});
+
+	return tsp.src('./src/**/*.ts')
+	.pipe(tsc(tsp))
+	.pipe(babel({
+			presets: ['es2015']
+		}))
+	.pipe(replace('<%version%>', pkgjson.version))
+	.pipe(gulp.dest('./dist/jspm'))
+	
+
+});
+
+
 gulp.task('build:webpack', ['build'], function () {
 
 	return gulp.src('./lib/index.js')
 	.pipe(webpack({
 		output: {
-			filename: 'di.js',
-			library: 'di',
+			filename: 'stick.di.js',
+			library: 'stick.di',
 			libraryTarget: 'umd'
 		}
 	}))
@@ -56,4 +75,4 @@ gulp.task('watch', ['build'], function () {
 	return gulp.watch('./src/**/*.ts', ['build']);
 });
 
-gulp.task('default', ['build', 'build:webpack' ,'template']);
+gulp.task('default', ['build', 'build:webpack' ,'template', 'build:jspm']);
