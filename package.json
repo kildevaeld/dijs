@@ -13,7 +13,7 @@
     "url": "https://kildevaeld@github.com/kildevaeld/dijs.git"
   },
   "jspm": {
-    "main": "dist/jspm/ndex.js",
+    "main": "index.js",
     "format": "amd",
     "registry": "github",
     "directories": {
