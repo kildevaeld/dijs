@@ -12,6 +12,9 @@
     "type": "git",
     "url": "https://kildevaeld@github.com/kildevaeld/dijs.git"
   },
+  "directories": {
+    "lib": "lib"
+  },
   "jspm": {
     "main": "index.js",
     "format": "amd",
